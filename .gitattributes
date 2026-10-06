@@ -1,0 +1,6 @@
+* text=auto
+*.png binary
+*.ttf binary
+# Preserve bundled upstream license text without whitespace lint noise.
+brandkit/fonts/*-OFL.txt -whitespace
+public/fonts/*-OFL.txt -whitespace

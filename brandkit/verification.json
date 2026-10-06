@@ -1,0 +1,468 @@
+{
+  "date": "2026-10-06",
+  "status": "Asset checks and specified color pairs pass",
+  "method": "WCAG relative luminance formula; opaque sRGB colors",
+  "limitations": [
+    "No application build performed",
+    "CSS not compiled in a running app",
+    "Contrast ratios cover exact color pairs only, not complete accessibility",
+    "Name, trademark, and domain availability not cleared"
+  ],
+  "overview": {
+    "width": 1448,
+    "height": 1086
+  },
+  "assets": [
+    {
+      "filename": "logos/png/cabivue-app-icon-192.png",
+      "width": 192,
+      "height": 192,
+      "format": "png"
+    },
+    {
+      "filename": "logos/png/cabivue-app-icon-512.png",
+      "width": 512,
+      "height": 512,
+      "format": "png"
+    },
+    {
+      "filename": "logos/png/cabivue-apple-touch-icon-180.png",
+      "width": 180,
+      "height": 180,
+      "format": "png"
+    },
+    {
+      "filename": "logos/png/cabivue-favicon-32.png",
+      "width": 32,
+      "height": 32,
+      "format": "png"
+    },
+    {
+      "filename": "logos/png/cabivue-logo-reversed.png",
+      "width": 1200,
+      "height": 321,
+      "format": "png"
+    },
+    {
+      "filename": "logos/png/cabivue-logo.png",
+      "width": 1200,
+      "height": 321,
+      "format": "png"
+    },
+    {
+      "filename": "logos/png/cabivue-mark.png",
+      "width": 512,
+      "height": 512,
+      "format": "png"
+    },
+    {
+      "filename": "logos/cabivue-app-icon.svg",
+      "selfContained": true,
+      "wordmarkOutlined": false
+    },
+    {
+      "filename": "logos/cabivue-logo-reversed.svg",
+      "selfContained": true,
+      "wordmarkOutlined": true
+    },
+    {
+      "filename": "logos/cabivue-logo.svg",
+      "selfContained": true,
+      "wordmarkOutlined": true
+    },
+    {
+      "filename": "logos/cabivue-mark-reversed.svg",
+      "selfContained": true,
+      "wordmarkOutlined": false
+    },
+    {
+      "filename": "logos/cabivue-mark.svg",
+      "selfContained": true,
+      "wordmarkOutlined": false
+    },
+    {
+      "filename": "logos/cabivue-wordmark.svg",
+      "selfContained": true,
+      "wordmarkOutlined": true
+    }
+  ],
+  "fonts": [
+    {
+      "filename": "fonts/IBMPlexMono-Medium.ttf",
+      "bytes": 136704,
+      "sha256": "a9b4c49bb299e05b5f6c481e7fb5e78943d2793249a0c8874ab574a2d1ea6755"
+    },
+    {
+      "filename": "fonts/IBMPlexMono-Regular.ttf",
+      "bytes": 135580,
+      "sha256": "6a3412f058c7d8dfd9170c41e85ade48e5156ecb89356110ca57a0a27734af46"
+    },
+    {
+      "filename": "fonts/Onest-Variable.ttf",
+      "bytes": 193056,
+      "sha256": "966c5c29b4755da84b6854d5c21dd4eaa2420225d0e9874de602de176d4a9f31"
+    }
+  ],
+  "contrast": [
+    {
+      "theme": "cabivue",
+      "label": "Main text on base-100",
+      "foreground": "#162b2a",
+      "background": "#f7f6f2",
+      "ratio": 13.74,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Muted text on base-100",
+      "foreground": "#526c67",
+      "background": "#f7f6f2",
+      "ratio": 5.25,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Essential border on base-100",
+      "foreground": "#6a837b",
+      "background": "#f7f6f2",
+      "ratio": 3.77,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Focus indicator on base-100",
+      "foreground": "#125b57",
+      "background": "#f7f6f2",
+      "ratio": 7.3,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Main text on base-200",
+      "foreground": "#162b2a",
+      "background": "#eef0ea",
+      "ratio": 12.94,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Muted text on base-200",
+      "foreground": "#526c67",
+      "background": "#eef0ea",
+      "ratio": 4.94,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Essential border on base-200",
+      "foreground": "#6a837b",
+      "background": "#eef0ea",
+      "ratio": 3.55,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Focus indicator on base-200",
+      "foreground": "#125b57",
+      "background": "#eef0ea",
+      "ratio": 6.88,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Main text on base-300",
+      "foreground": "#162b2a",
+      "background": "#dce9e5",
+      "ratio": 11.91,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Muted text on base-300",
+      "foreground": "#526c67",
+      "background": "#dce9e5",
+      "ratio": 4.55,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Essential border on base-300",
+      "foreground": "#6a837b",
+      "background": "#dce9e5",
+      "ratio": 3.27,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Focus indicator on base-300",
+      "foreground": "#125b57",
+      "background": "#dce9e5",
+      "ratio": 6.33,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Content on primary",
+      "foreground": "#f7f6f2",
+      "background": "#125b57",
+      "ratio": 7.3,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Content on secondary",
+      "foreground": "#f7f6f2",
+      "background": "#3d625e",
+      "ratio": 6.25,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Content on accent",
+      "foreground": "#162b2a",
+      "background": "#e7b17b",
+      "ratio": 7.76,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Content on neutral",
+      "foreground": "#f7f6f2",
+      "background": "#162b2a",
+      "ratio": 13.74,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Content on info",
+      "foreground": "#f7f6f2",
+      "background": "#245c7c",
+      "ratio": 6.7,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Content on success",
+      "foreground": "#f7f6f2",
+      "background": "#27664f",
+      "ratio": 6.26,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Content on warning",
+      "foreground": "#f7f6f2",
+      "background": "#8a531e",
+      "ratio": 5.82,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue",
+      "label": "Content on error",
+      "foreground": "#f7f6f2",
+      "background": "#b13f3b",
+      "ratio": 5.33,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Main text on base-100",
+      "foreground": "#eff4f1",
+      "background": "#132321",
+      "ratio": 14.64,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Muted text on base-100",
+      "foreground": "#adc4bc",
+      "background": "#132321",
+      "ratio": 8.84,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Essential border on base-100",
+      "foreground": "#7a9b8f",
+      "background": "#132321",
+      "ratio": 5.36,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Focus indicator on base-100",
+      "foreground": "#9dd5c5",
+      "background": "#132321",
+      "ratio": 9.89,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Main text on base-200",
+      "foreground": "#eff4f1",
+      "background": "#1b302d",
+      "ratio": 12.53,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Muted text on base-200",
+      "foreground": "#adc4bc",
+      "background": "#1b302d",
+      "ratio": 7.56,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Essential border on base-200",
+      "foreground": "#7a9b8f",
+      "background": "#1b302d",
+      "ratio": 4.59,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Focus indicator on base-200",
+      "foreground": "#9dd5c5",
+      "background": "#1b302d",
+      "ratio": 8.46,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Main text on base-300",
+      "foreground": "#eff4f1",
+      "background": "#244039",
+      "ratio": 10.11,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Muted text on base-300",
+      "foreground": "#adc4bc",
+      "background": "#244039",
+      "ratio": 6.1,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Essential border on base-300",
+      "foreground": "#7a9b8f",
+      "background": "#244039",
+      "ratio": 3.7,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Focus indicator on base-300",
+      "foreground": "#9dd5c5",
+      "background": "#244039",
+      "ratio": 6.83,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Content on primary",
+      "foreground": "#132321",
+      "background": "#9dd5c5",
+      "ratio": 9.89,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Content on secondary",
+      "foreground": "#132321",
+      "background": "#adc4bc",
+      "ratio": 8.84,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Content on accent",
+      "foreground": "#132321",
+      "background": "#e7b17b",
+      "ratio": 8.51,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Content on neutral",
+      "foreground": "#eff4f1",
+      "background": "#2f5147",
+      "ratio": 7.9,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Content on info",
+      "foreground": "#132321",
+      "background": "#9ec5e0",
+      "ratio": 8.93,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Content on success",
+      "foreground": "#132321",
+      "background": "#a3d5b5",
+      "ratio": 9.88,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Content on warning",
+      "foreground": "#132321",
+      "background": "#e7b17b",
+      "ratio": 8.51,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "cabivue-dark",
+      "label": "Content on error",
+      "foreground": "#132321",
+      "background": "#f0a49c",
+      "ratio": 8.14,
+      "minimum": 4.5,
+      "pass": true
+    }
+  ]
+}

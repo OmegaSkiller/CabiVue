@@ -1,0 +1,133 @@
+/* Cabivue: Tailwind CSS 4 + daisyUI 5.
+   Keep this file beside fonts/ so the self-hosted font URLs resolve. */
+@import 'tailwindcss';
+@plugin "daisyui" {
+  themes: false;
+}
+
+@font-face {
+  font-family: 'Onest';
+  src: url('/fonts/Onest-Variable.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fonts/IBMPlexMono-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fonts/IBMPlexMono-Medium.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: 'Onest', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+@plugin "daisyui/theme" {
+  name: 'cabivue';
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+  --color-base-100: #f7f6f2;
+  --color-base-200: #eef0ea;
+  --color-base-300: #dce9e5;
+  --color-base-content: #162b2a;
+  --color-primary: #125b57;
+  --color-primary-content: #f7f6f2;
+  --color-secondary: #3d625e;
+  --color-secondary-content: #f7f6f2;
+  --color-accent: #e7b17b;
+  --color-accent-content: #162b2a;
+  --color-neutral: #162b2a;
+  --color-neutral-content: #f7f6f2;
+  --color-info: #245c7c;
+  --color-info-content: #f7f6f2;
+  --color-success: #27664f;
+  --color-success-content: #f7f6f2;
+  --color-warning: #8a531e;
+  --color-warning-content: #f7f6f2;
+  --color-error: #b13f3b;
+  --color-error-content: #f7f6f2;
+  --cabivue-muted: #526c67;
+  --cabivue-border: #6a837b;
+  --radius-selector: 0.5rem;
+  --radius-field: 0.75rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+  name: 'cabivue-dark';
+  default: false;
+  prefersdark: true;
+  color-scheme: dark;
+  --color-base-100: #132321;
+  --color-base-200: #1b302d;
+  --color-base-300: #244039;
+  --color-base-content: #eff4f1;
+  --color-primary: #9dd5c5;
+  --color-primary-content: #132321;
+  --color-secondary: #adc4bc;
+  --color-secondary-content: #132321;
+  --color-accent: #e7b17b;
+  --color-accent-content: #132321;
+  --color-neutral: #2f5147;
+  --color-neutral-content: #eff4f1;
+  --color-info: #9ec5e0;
+  --color-info-content: #132321;
+  --color-success: #a3d5b5;
+  --color-success-content: #132321;
+  --color-warning: #e7b17b;
+  --color-warning-content: #132321;
+  --color-error: #f0a49c;
+  --color-error-content: #132321;
+  --cabivue-muted: #adc4bc;
+  --cabivue-border: #7a9b8f;
+  --radius-selector: 0.5rem;
+  --radius-field: 0.75rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-base-content);
+    background-color: var(--color-base-100);
+    line-height: 1.5;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .input,
+  .textarea,
+  .select,
+  .checkbox,
+  .radio {
+    border-color: var(--cabivue-border);
+  }
+}

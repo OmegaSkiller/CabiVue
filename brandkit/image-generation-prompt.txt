@@ -1,0 +1,35 @@
+Use case: logo-brand
+Asset type: premium brand identity overview board for an open source mobile-first medicine-cabinet web app.
+Create ONE extremely polished 3-by-3 brand-kit overview image for "Cabivue", spelled exactly C-a-b-i-v-u-e. Landscape 4:3 composition, high resolution, no outer text beyond the nine panels. Designed by a senior European identity studio, clear grids, strong deliberate gutters, editorial typographic hierarchy, restrained details.
+
+Brand strategy: household medication organization and clear stock/expiry information, photo-assisted data entry and an optional educational assistant. Emotional promise: a calm, understandable cabinet, never medical certainty. Human, precise, domestic and trustworthy; never a pharmacy authority or "AI doctor". Core metaphor: opening a cabinet and seeing what is there. Logo method: meaningful C monogram + shelf using simple construction geometry. One canonical emblem consistently repeated in every panel: an open-right C-shaped rounded rectangular frame, with a single short floating horizontal shelf inside. Strong monoline stroke, crisp deliberate right-side opening, balanced proportions. No medical cross, shield, pill/capsule, heart, sparkle, eye, or leaf symbol. NOT a full rounded square enclosing a separate letter. Emblem can stand alone.
+
+Exact palette: Deep Harbor teal #125B57, warm Linen #F7F6F2, near-black Graphite #162B2A, soft Mist #DCE9E5, Apricot #E7B17B. Outer presentation canvas Graphite #162B2A with narrow regular gutters; inner panels alternate mostly warm Linen, Harbor teal, Mist; Apricot only restrained detail or one emphasis panel. Keep accents consistent across entire board. App UI is predominantly light ivory with teal primary actions. No generic purple/blue gradients, no medical red cross, no excessive glossy 3D, no neon.
+
+Typeface direction: Onest-style contemporary humanist geometric sans, medium/semibold, careful kerning; lower-case "cabivue" wordmark. IBM Plex Mono-style dates and small functional details only. Use sparse LARGE readable type. Exact text allowed:
+"cabivue"
+"Know what you have."
+"Your cabinet"
+"Add medicine"
+"Review scan"
+"Expiry unknown"
+"Onest"
+"IBM Plex Mono"
+"Aa"
+"01 / 02 / 03"
+"#125B57" "#F7F6F2" "#162B2A" "#DCE9E5" "#E7B17B"
+"cabinet + clarity"
+Do not invent a domain, drug brand, medical claim, dosage, fake body text, or dense menu.
+
+Nine panels, equal aligned cells with clear rhythmic composition:
+1 top left: quiet warm Linen logo cover, large Harbor emblem with lower-case cabivue wordmark, very generous negative space.
+2 top center: emblem construction on pale Mist, fine technical grid with the same simple C/shelf geometry, label "cabinet + clarity". Two small diagram strokes, minimal.
+3 top right: believable premium crop of mobile app in a dark-teal phone frame, light screen labelled "Your cabinet", two calm generic inventory cards and one "Add medicine" button. Very sparse, no tiny fake dashboard.
+4 middle left: Harbor teal panel with large Linen tagline "Know what you have." in three comfortably spaced lines and tiny emblem.
+5 middle center: disciplined five-color palette arranged as large offset rectangular material chips or swatches with exact hex labels. Avoid adding colors.
+6 middle right: Linen typography specimen "Aa" huge, "Onest" and "IBM Plex Mono" readable, a short mono date specimen "01 / 02 / 03". No lorem ipsum.
+7 bottom left: overhead matte ivory cabinet inventory card and subtle debossed teal emblem on a folder, one lower-case cabivue wordmark, premium paper texture and soft directional sunlight. This is an organizational card, NOT medicine packaging or a fake prescription.
+8 bottom center: art-directed warm domestic still life of a real organized medicine cabinet shelf: few unlabeled white carton boxes, a small opaque brown glass bottle, soft daylight, gentle shadows, muted teal/lime-less palette. No drug names, no pills scattered, no people. Quiet image with a small aligned brand emblem overlay.
+9 bottom right: precise app-icon and UI-detail system on Harbor: same Linen emblem as app icon, two calm state chips reading "Review scan" and "Expiry unknown", one small Apricot highlight. Not a row of random icons.
+
+All logos must be identical, all text legible and minimal. Polished brand-guidelines case-study image with controlled density, tactile and digital applications connected by one clear concept. No watermarks or extra unrelated decoration.

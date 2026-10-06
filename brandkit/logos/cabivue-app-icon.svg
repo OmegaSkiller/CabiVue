@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="brand-title" style="color:#125B57">
+  <title id="brand-title">Cabivue app icon</title>
+  <rect width="512" height="512" fill="#F7F6F2"/>
+<g transform="translate(112 112) scale(2.25)"><path d="M102 22H48C31 22 22 33 22 50V78C22 95 33 106 50 106H102" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M44 64H86" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round"/></g>
+</svg>

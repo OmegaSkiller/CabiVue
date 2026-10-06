@@ -1,0 +1,21 @@
+services:
+  app:
+    build: .
+    ports: ['127.0.0.1:3210:3000']
+    environment:
+      APP_ORIGIN: ${CABIVUE_PUBLIC_ORIGIN:-http://localhost:3210}
+      SECURE_COOKIES: ${SECURE_COOKIES:-false}
+      TRUST_PROXY: ${TRUST_PROXY:-}
+      BOOTSTRAP_SECRET_FILE: /run/secrets/bootstrap
+    secrets: [bootstrap]
+    volumes: ['cabivue-data:/data']
+    read_only: true
+    tmpfs: ['/tmp:size=64m,mode=1777']
+    cap_drop: [ALL]
+    security_opt: ['no-new-privileges:true']
+    restart: unless-stopped
+volumes:
+  cabivue-data:
+secrets:
+  bootstrap:
+    file: ./secrets/bootstrap

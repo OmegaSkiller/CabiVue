@@ -1,0 +1,10 @@
+node_modules
+dist
+data
+brandkit
+public
+prompts
+package-lock.json
+playwright-report
+test-results
+docs/build-brief.md

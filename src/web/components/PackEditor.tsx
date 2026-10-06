@@ -341,13 +341,17 @@ export function PackEditor({
     setBusy(true);
     setError('');
     try {
+      const normalized = {
+        ...fields,
+        expiryPrecision: fields.expiryValue ? fields.expiryPrecision : 'unknown',
+      };
       await api(
         pack ? `/packs/${pack.id}` : '/packs',
         send(
           pack ? 'PUT' : 'POST',
           pack
-            ? { ...fields, version: pack.version }
-            : { ...fields, productId: productId || null, product: productId ? null : product },
+            ? { ...normalized, version: pack.version }
+            : { ...normalized, productId: productId || null, product: productId ? null : product },
         ),
       );
       onSaved();

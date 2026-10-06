@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import type { Store } from './db.js';
 import type { Config } from './config.js';
+import type { Intake } from '../contracts/assistant.js';
 import { HttpError } from './errors.js';
 const scryptAsync = (password: string, salt: string) =>
   new Promise<Buffer>((resolve, reject) =>
@@ -27,7 +28,14 @@ export const credentialsSchema = z.strictObject({
   username: z.string().trim().min(3).max(60),
   password: z.string().min(12).max(256),
 });
-export type Session = { hash: string; csrf: string; expiresAt: number; providerKey?: string };
+export type Session = {
+  hash: string;
+  csrf: string;
+  expiresAt: number;
+  providerKey?: string;
+  providerAbort?: AbortController;
+  intake?: Intake;
+};
 export class Auth {
   readonly transient = new Map<string, Session>();
   constructor(
@@ -123,7 +131,11 @@ export class Auth {
   }
   destroy(hash: string) {
     const state = this.transient.get(hash);
-    if (state) delete state.providerKey;
+    if (state) {
+      state.providerAbort?.abort();
+      delete state.providerKey;
+      delete state.intake;
+    }
     this.transient.delete(hash);
     this.store.db.prepare('DELETE FROM sessions WHERE token_hash=?').run(hash);
   }

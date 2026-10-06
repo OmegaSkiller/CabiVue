@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ReactNode } from 'react';
+import { useState, useEffect, type FormEvent, type ReactNode } from 'react';
 import type { Settings, Location } from '../../contracts/inventory';
 import { api, send } from '../api';
 import { Field, ErrorMessage } from './common';
@@ -7,17 +7,23 @@ export function SettingsScreen({
   locations,
   onSaved,
   children,
+  onDirty,
 }: {
   settings: Settings;
   locations: Location[];
   onSaved: () => void;
   children?: ReactNode;
+  onDirty: (dirty: boolean) => void;
 }) {
   const [values, setValues] = useState(settings);
   const [location, setLocation] = useState('');
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
+  useEffect(
+    () => onDirty(JSON.stringify(values) !== JSON.stringify(settings) || !!location),
+    [values, settings, location, onDirty],
+  );
   async function save(e: FormEvent) {
     e.preventDefault();
     setBusy(true);

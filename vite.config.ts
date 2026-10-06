@@ -38,6 +38,10 @@ export default defineConfig({
       },
     }),
   ],
-  server: { port: 5173, proxy: { '/api': `http://127.0.0.1:${process.env.PORT || 3210}` } },
+  server: {
+    port: Number(process.env.WEB_PORT || 5173),
+    strictPort: true,
+    proxy: { '/api': `http://127.0.0.1:${process.env.PORT || 3210}` },
+  },
   build: { outDir: 'dist/web', emptyOutDir: true },
 });

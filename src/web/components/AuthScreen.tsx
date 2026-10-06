@@ -6,10 +6,14 @@ export function AuthScreen({
   configured,
   demo,
   onLogin,
+  onUrgent,
+  dark,
 }: {
   configured: boolean;
   demo: boolean;
   onLogin: () => void;
+  onUrgent: () => void;
+  dark: boolean;
 }) {
   const [username, setUsername] = useState(demo ? 'demo' : '');
   const [password, setPassword] = useState(demo ? 'cabivue-demo-only' : '');
@@ -40,7 +44,11 @@ export function AuthScreen({
   return (
     <main className="auth-shell">
       <section className="auth-intro">
-        <img src="/brand/cabivue-logo.svg" className="logo" alt="Cabivue" />
+        <img
+          src={dark ? '/brand/cabivue-logo-reversed.svg' : '/brand/cabivue-logo.svg'}
+          className="logo"
+          alt="Cabivue"
+        />
         <div>
           <p className="eyebrow">Your household, organized</p>
           <h1>
@@ -117,6 +125,9 @@ export function AuthScreen({
           </button>
         </form>
         <p className="small muted">Your cabinet works without an AI key.</p>
+        <button className="btn btn-ghost" onClick={onUrgent}>
+          Urgent help
+        </button>
       </section>
     </main>
   );

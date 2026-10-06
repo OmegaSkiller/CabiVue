@@ -10,6 +10,9 @@ import { Auth, credentialsSchema, type Session } from './auth.js';
 import type { Config } from './config.js';
 import { HttpError } from './errors.js';
 import { packInputSchema, packEditSchema, text } from '../contracts/inventory.js';
+import { Provider, MODEL_ID } from './provider.js';
+import { assistantRouter } from './assistant.js';
+import { Imports } from './imports.js';
 import { todayIn } from '../domain/expiry.js';
 export function createApp(config: Config, store = new Store(config.dataDir)) {
   const app = express();
@@ -50,7 +53,10 @@ export function createApp(config: Config, store = new Store(config.dataDir)) {
     }
     next();
   });
-  app.use('/api', express.json({ limit: '256kb' }));
+  const smallJson = express.json({ limit: '256kb' });
+  app.use('/api', (req, res, next) =>
+    /^\/imports\/[^/]+\/extract$/.test(req.path) ? next() : smallJson(req, res, next),
+  );
   const loginLimit = rateLimit({
     windowMs: 15 * 60 * 1000,
     limit: 8,
@@ -164,6 +170,32 @@ export function createApp(config: Config, store = new Store(config.dataDir)) {
   });
   // Private features mount here before the catch-all and error boundary.
   const privateRoutes = express.Router();
+  const provider = new Provider();
+  const imports = new Imports(store, provider, config.demo);
+  privateRoutes.use(imports.router);
+  privateRoutes.use(assistantRouter(store, provider, config.demo));
+  privateRoutes.get('/provider', (_req, res) =>
+    res.json({
+      configured: !!(res.locals.session as Session).providerKey,
+      provider: 'OpenAI',
+      model: MODEL_ID,
+      simulated: config.demo,
+    }),
+  );
+  privateRoutes.put('/provider/key', (req, res) => {
+    const { key } = z.strictObject({ key: z.string().trim().min(20).max(300) }).parse(req.body);
+    const session = res.locals.session as Session;
+    session.providerAbort?.abort();
+    session.providerAbort = new AbortController();
+    session.providerKey = key;
+    res.json({ configured: true });
+  });
+  privateRoutes.delete('/provider/key', (_req, res) => {
+    const session = res.locals.session as Session;
+    session.providerAbort?.abort();
+    delete session.providerKey;
+    res.json({ configured: false });
+  });
   app.use('/api', privateRoutes);
   app.use('/api', (_req, res) => res.status(404).json({ error: 'Endpoint not found.' }));
   const web = resolve('dist/web');
@@ -177,12 +209,10 @@ export function createApp(config: Config, store = new Store(config.dataDir)) {
   app.use(
     (error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
       if (error instanceof ZodError) {
-        res
-          .status(400)
-          .json({
-            error: 'Check the fields and try again.',
-            details: error.issues.map((i) => ({ field: i.path.join('.'), message: i.message })),
-          });
+        res.status(400).json({
+          error: 'Check the fields and try again.',
+          details: error.issues.map((i) => ({ field: i.path.join('.'), message: i.message })),
+        });
         return;
       }
       if (error instanceof HttpError) {
@@ -190,17 +220,18 @@ export function createApp(config: Config, store = new Store(config.dataDir)) {
         return;
       }
       const code = (error as { status?: number })?.status;
-      res
-        .status(code === 413 ? 413 : 500)
-        .json({
-          error:
-            code === 413
-              ? 'The upload is too large.'
-              : 'The request could not be completed. Your changes were not saved.',
-        });
+      res.status(code === 413 ? 413 : 500).json({
+        error:
+          code === 413
+            ? 'The upload is too large.'
+            : 'The request could not be completed. Your changes were not saved.',
+      });
     },
   );
-  const cleanup = setInterval(() => auth.cleanup(), 60000);
+  const cleanup = setInterval(() => {
+    auth.cleanup();
+    imports.cleanup();
+  }, 60000);
   cleanup.unref();
   return {
     app,
@@ -209,6 +240,7 @@ export function createApp(config: Config, store = new Store(config.dataDir)) {
     privateRoutes,
     close: () => {
       clearInterval(cleanup);
+      imports.close();
       auth.clear();
       store.close();
     },

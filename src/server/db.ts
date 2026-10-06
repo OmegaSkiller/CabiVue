@@ -112,8 +112,11 @@ export class Store {
     const product = this.product(
       this.db.prepare('SELECT * FROM products WHERE id=?').get(r.product_id) as Row,
     );
-    const purchase = this.db.prepare('SELECT * FROM purchases WHERE pack_id=?').get(r.id) as
-      Row | undefined;
+    const purchase = this.db
+      .prepare(
+        'SELECT l.* FROM purchase_lines l JOIN pack_purchases p ON p.purchase_line_id=l.id WHERE p.pack_id=?',
+      )
+      .get(r.id) as Row | undefined;
     return {
       id: r.id,
       productId: r.product_id,
@@ -166,7 +169,22 @@ export class Store {
     );
     return id;
   }
-  createPack(input: PackInput, purchase: Purchase | null = null): Pack {
+  createPurchaseLine(purchase: Purchase): string {
+    const id = randomUUID();
+    this.db
+      .prepare('INSERT INTO purchase_lines VALUES(?,?,?,?,?,?,?)')
+      .run(
+        id,
+        purchase.date,
+        purchase.pharmacy,
+        purchase.purchasedPacks,
+        purchase.unitPrice,
+        purchase.lineTotal,
+        purchase.currency,
+      );
+    return id;
+  }
+  createPack(input: PackInput, purchaseLineId: string | null = null): Pack {
     return this.db
       .transaction(() => {
         const productId = input.productId || this.createProduct(input.product!);
@@ -193,18 +211,8 @@ export class Store {
             input.notes,
             new Date().toISOString(),
           );
-        if (purchase)
-          this.db
-            .prepare('INSERT INTO purchases VALUES(?,?,?,?,?,?,?,?)')
-            .run(
-              id,
-              purchase.date,
-              purchase.pharmacy,
-              purchase.purchasedPacks,
-              purchase.unitPrice,
-              purchase.lineTotal,
-              purchase.currency,
-            );
+        if (purchaseLineId)
+          this.db.prepare('INSERT INTO pack_purchases VALUES(?,?)').run(id, purchaseLineId);
         return this.getPack(id);
       })
       .immediate();

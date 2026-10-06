@@ -60,17 +60,20 @@ export default function App() {
   const [assistantDirty, setAssistantDirty] = useState(false);
   const [urgentOpen, setUrgentOpen] = useState(false);
 
-  function navigate(next: string) {
-    if (next === tab) return;
-    if (next !== tab && dirty && !window.confirm('Discard your unsaved edits or active review?'))
-      return;
+  function navigate(next: string, nextFilter = 'all') {
+    if (next === tab) {
+      setFilter(nextFilter);
+      return true;
+    }
+    if (dirty && !window.confirm('Discard your unsaved edits or active review?')) return false;
     setScanDirty(false);
     setBackupDirty(false);
     setSettingsDirty(false);
     setProviderDirty(false);
     setAssistantDirty(false);
     setTab(next);
-    setFilter('all');
+    setFilter(nextFilter);
+    return true;
   }
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('all');
@@ -315,10 +318,9 @@ export default function App() {
       tab === 'expiry' ? (a.expiryValue || '9999').localeCompare(b.expiryValue || '9999') : 0,
     );
   function showMissing() {
-    setTab('cabinet');
+    if (!navigate('cabinet', 'unknown')) return;
     setQuery('');
     setLocation('');
-    setFilter('unknown');
   }
   return (
     <div className="app-shell">
@@ -511,30 +513,15 @@ export default function App() {
             <div className={tab === 'cabinet' ? 'cabinet-columns' : ''}>
               <div className="cabinet-main">
                 <div className="cabinet-summary">
-                  <button
-                    onClick={() => {
-                      setFilter('all');
-                      setTab('cabinet');
-                    }}
-                  >
+                  <button onClick={() => navigate('cabinet')}>
                     <span className="summary-number mono">{active.length}</span>
                     <span>Packs in cabinet</span>
                   </button>
-                  <button
-                    onClick={() => {
-                      setFilter('soon');
-                      setTab('expiry');
-                    }}
-                  >
+                  <button onClick={() => navigate('expiry', 'soon')}>
                     <span className="summary-number mono">{soon.length}</span>
                     <span>Expiring soon</span>
                   </button>
-                  <button
-                    onClick={() => {
-                      setFilter('expired');
-                      setTab('expiry');
-                    }}
-                  >
+                  <button onClick={() => navigate('expiry', 'expired')}>
                     <span className="summary-number mono">{expired.length}</span>
                     <span>Expired</span>
                   </button>

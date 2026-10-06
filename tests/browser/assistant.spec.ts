@@ -10,6 +10,14 @@ test('urgent help is available before sign in; interview stays transient and edi
   await expect(page.getByText(/No local emergency number has been configured/)).toBeVisible();
   await page.getByRole('button', { name: 'Return to Cabivue' }).click();
   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.getByLabel('Your answer').fill('Synthetic unsaved history');
+  page.once('dialog', (dialog) => dialog.dismiss());
+  await page.getByRole('button', { name: /^\d+ Expiring soon$/ }).click();
+  await expect(page.getByLabel('Your answer')).toHaveValue('Synthetic unsaved history');
+  await expect(page.getByRole('heading', { name: 'My cabinet', exact: true })).toBeVisible();
+  await page.getByLabel('Your answer').fill('');
+  await page.setViewportSize({ width: 320, height: 900 });
   await page.getByRole('button', { name: 'Assistant', exact: true }).click();
   await page
     .getByLabel('Urgent or severe symptoms / possible overdose or poisoning')

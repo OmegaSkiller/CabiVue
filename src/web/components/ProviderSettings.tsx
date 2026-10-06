@@ -6,7 +6,7 @@ export function ProviderSettings({ onDirty }: { onDirty: (dirty: boolean) => voi
   const [key, setKey] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  useEffect(() => onDirty(!!key), [key, onDirty]);
+  useEffect(() => onDirty(!!key || busy), [key, busy, onDirty]);
   useEffect(() => {
     let active = true;
     api<{ configured: boolean }>('/provider')
@@ -59,37 +59,39 @@ export function ProviderSettings({ onDirty }: { onDirty: (dirty: boolean) => voi
         {configured ? 'Key connected for this session.' : 'No provider key connected.'}
       </p>
       <form onSubmit={save}>
-        <Field
-          label="OpenAI API key"
-          hint="Held in server memory for this session. Cleared on sign out, expiry, removal, or restart."
-        >
-          <input
-            className="input"
-            type="password"
-            value={key}
-            onChange={(e) => setKey(e.target.value)}
-            autoComplete="off"
-            spellCheck={false}
-            minLength={20}
-            maxLength={300}
-            required
-          />
-        </Field>
-        <div className="provider-actions">
-          <button className="btn btn-primary" disabled={busy}>
-            {configured ? 'Replace key' : 'Connect key'}
-          </button>
-          {configured && (
-            <button
-              className="btn btn-outline"
-              type="button"
-              disabled={busy}
-              onClick={() => void remove()}
-            >
-              Remove key
+        <fieldset disabled={busy}>
+          <Field
+            label="OpenAI API key"
+            hint="Held in server memory for this session. Cleared on sign out, expiry, removal, or restart."
+          >
+            <input
+              className="input"
+              type="password"
+              value={key}
+              onChange={(e) => setKey(e.target.value)}
+              autoComplete="off"
+              spellCheck={false}
+              minLength={20}
+              maxLength={300}
+              required
+            />
+          </Field>
+          <div className="provider-actions">
+            <button className="btn btn-primary" disabled={busy}>
+              {configured ? 'Replace key' : 'Connect key'}
             </button>
-          )}
-        </div>
+            {configured && (
+              <button
+                className="btn btn-outline"
+                type="button"
+                disabled={busy}
+                onClick={() => void remove()}
+              >
+                Remove key
+              </button>
+            )}
+          </div>
+        </fieldset>
       </form>
       <p className="small muted">
         Your cabinet works without a key. The connection does not make AI processing local.

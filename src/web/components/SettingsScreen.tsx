@@ -21,8 +21,8 @@ export function SettingsScreen({
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
   useEffect(
-    () => onDirty(JSON.stringify(values) !== JSON.stringify(settings) || !!location),
-    [values, settings, location, onDirty],
+    () => onDirty(JSON.stringify(values) !== JSON.stringify(settings) || !!location || busy),
+    [values, settings, location, busy, onDirty],
   );
   async function save(e: FormEvent) {
     e.preventDefault();

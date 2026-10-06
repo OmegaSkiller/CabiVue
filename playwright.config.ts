@@ -6,8 +6,7 @@ export default defineConfig({
   retries: 0,
   use: { baseURL: 'http://localhost:5174', trace: 'retain-on-failure' },
   webServer: {
-    command:
-      'DATA_DIR=./data/browser-test npm run demo && DATA_DIR=./data/browser-test DEMO_MODE=true PORT=3211 WEB_PORT=5174 APP_ORIGIN=http://localhost:5174 npm run dev',
+    command: 'node scripts/browser-test.mjs',
     url: 'http://localhost:5174',
     reuseExistingServer: false,
   },

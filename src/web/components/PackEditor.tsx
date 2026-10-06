@@ -364,59 +364,63 @@ export function PackEditor({
   return (
     <Dialog title={pack ? pack.product.name : 'Add medicine'} onClose={close}>
       <form onSubmit={submit}>
-        <ErrorMessage error={error} />
-        {pack ? (
-          <div className="pack-identity">
-            <p>
-              {[pack.product.form, pack.product.ingredientText].filter(Boolean).join(' · ') ||
-                'Formulation not recorded'}
-            </p>
-            <span className="badge badge-outline">
-              {pack.product.identityConfirmed ? 'Identity checked by you' : 'Identity unconfirmed'}
-            </span>
-            <p className="small muted">
-              {pack.sourceFacts.some((s) => s.reviewStatus === 'reviewed')
-                ? 'Reviewed source information available.'
-                : 'No reviewed leaflet information.'}
-            </p>
-            {pack.purchase && (
-              <p className="small">
-                Purchased {pack.purchase.date || 'date unknown'} ·{' '}
-                {pack.purchase.pharmacy || 'pharmacy unknown'}
-                {pack.purchase.lineTotal != null
-                  ? ` · ${pack.purchase.lineTotal} ${pack.purchase.currency || ''}`
-                  : ''}
+        <fieldset disabled={busy}>
+          <ErrorMessage error={error} />
+          {pack ? (
+            <div className="pack-identity">
+              <p>
+                {[pack.product.form, pack.product.ingredientText].filter(Boolean).join(' · ') ||
+                  'Formulation not recorded'}
               </p>
-            )}
+              <span className="badge badge-outline">
+                {pack.product.identityConfirmed
+                  ? 'Identity checked by you'
+                  : 'Identity unconfirmed'}
+              </span>
+              <p className="small muted">
+                {pack.sourceFacts.some((s) => s.reviewStatus === 'reviewed')
+                  ? 'Reviewed source information available.'
+                  : 'No reviewed leaflet information.'}
+              </p>
+              {pack.purchase && (
+                <p className="small">
+                  Purchased {pack.purchase.date || 'date unknown'} ·{' '}
+                  {pack.purchase.pharmacy || 'pharmacy unknown'}
+                  {pack.purchase.lineTotal != null
+                    ? ` · ${pack.purchase.lineTotal} ${pack.purchase.currency || ''}`
+                    : ''}
+                </p>
+              )}
+            </div>
+          ) : (
+            <>
+              <Field label="Product">
+                <select
+                  className="select"
+                  value={productId}
+                  onChange={(e) => setProductId(e.target.value)}
+                >
+                  <option value="">Enter a new product</option>
+                  {products.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              {!productId && <ProductFields product={product} onChange={setProduct} />}
+            </>
+          )}
+          <PackFieldsForm value={fields} onChange={setFields} locations={locations} />
+          <div className="dialog-actions">
+            <button type="button" className="btn btn-ghost" onClick={close}>
+              Cancel
+            </button>
+            <button className="btn btn-primary" disabled={busy}>
+              {busy ? 'Saving…' : pack ? 'Save changes' : 'Add to cabinet'}
+            </button>
           </div>
-        ) : (
-          <>
-            <Field label="Product">
-              <select
-                className="select"
-                value={productId}
-                onChange={(e) => setProductId(e.target.value)}
-              >
-                <option value="">Enter a new product</option>
-                {products.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-            </Field>
-            {!productId && <ProductFields product={product} onChange={setProduct} />}
-          </>
-        )}
-        <PackFieldsForm value={fields} onChange={setFields} locations={locations} />
-        <div className="dialog-actions">
-          <button type="button" className="btn btn-ghost" onClick={close}>
-            Cancel
-          </button>
-          <button className="btn btn-primary" disabled={busy}>
-            {busy ? 'Saving…' : pack ? 'Save changes' : 'Add to cabinet'}
-          </button>
-        </div>
+        </fieldset>
       </form>
     </Dialog>
   );

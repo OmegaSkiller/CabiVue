@@ -70,16 +70,14 @@ it.each([
   expect(fetch).toHaveBeenCalledTimes(1);
 });
 it('returns an actionable provider rate-limit error without retries', async () => {
-  const fetch = vi
-    .spyOn(globalThis, 'fetch')
-    .mockResolvedValue(
-      new Response(
-        JSON.stringify({
-          error: { message: 'SYNTHETIC SECRET MUST NOT BE EXPOSED', type: 'rate_limit' },
-        }),
-        { status: 429, headers: { 'Content-Type': 'application/json' } },
-      ),
-    );
+  const fetch = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+    new Response(
+      JSON.stringify({
+        error: { message: 'SYNTHETIC SECRET MUST NOT BE EXPOSED', type: 'rate_limit' },
+      }),
+      { status: 429, headers: { 'Content-Type': 'application/json' } },
+    ),
+  );
   await expect(
     new Provider().structured(
       session(),

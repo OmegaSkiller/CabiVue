@@ -1109,3 +1109,11 @@
     }
   }
 }
+@layer utilities {
+  fieldset {
+    min-width: 0;
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+}

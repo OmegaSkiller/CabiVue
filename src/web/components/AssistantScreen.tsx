@@ -207,70 +207,75 @@ export function AssistantScreen({
               )}
               {next !== null && next !== undefined ? (
                 <form className="interview-form" onSubmit={answer}>
-                  <p className="eyebrow">History group {next + 1} of 5</p>
-                  <h3>{view.question}</h3>
-                  {next === 0 && <RiskFields risk={risk} onChange={setRisk} keys={['urgent']} />}
-                  {next === 2 && (
-                    <RiskFields
-                      risk={risk}
-                      onChange={setRisk}
-                      keys={['adult', 'pregnancy', 'highRisk']}
-                    />
-                  )}
-                  {next === 4 && (
-                    <RiskFields risk={risk} onChange={setRisk} keys={['unsafeExposure']} />
-                  )}
-                  <Field
-                    label="Your answer"
-                    hint="Say ‘unknown’ for anything you’re unsure about. Include only what you want in this transient interview."
-                  >
-                    <textarea
-                      className="textarea"
-                      rows={5}
-                      value={message}
-                      maxLength={2000}
-                      required
-                      onChange={(e) => setMessage(e.target.value)}
-                    />
-                  </Field>
-                  <label className="check-label">
-                    <input
-                      className="checkbox checkbox-sm"
-                      type="checkbox"
-                      checked={useProvider}
-                      onChange={(e) => {
-                        setUseProvider(e.target.checked);
-                        setConsent(false);
-                      }}
-                    />
-                    {demo
-                      ? 'Use simulated history extraction'
-                      : 'Use OpenAI to extract interview facts'}
-                  </label>
-                  {useProvider && (
-                    <div className="consent-note">
-                      <p className="small">
-                        {demo
-                          ? 'Demo output is simulated. No provider request is made.'
-                          : 'OpenAI receives this answer, the interview group, urgency state, and the selected pack’s allowed source facts/limitations. Other cabinet records and previous answers are not sent. Provider policies and charges apply.'}
-                      </p>
-                      <label className="check-label">
-                        <input
-                          className="checkbox checkbox-sm"
-                          type="checkbox"
-                          checked={consent}
-                          onChange={(e) => setConsent(e.target.checked)}
-                        />
-                        {demo
-                          ? 'I understand this extraction is simulated.'
-                          : 'Send this answer and selected context to OpenAI for this request.'}
-                      </label>
-                    </div>
-                  )}
-                  <button className="btn btn-primary" disabled={busy || (useProvider && !consent)}>
-                    {busy ? 'Processing…' : 'Continue interview'}
-                    <IconArrowRight size={18} />
-                  </button>
+                  <fieldset disabled={busy}>
+                    <p className="eyebrow">History group {next + 1} of 5</p>
+                    <h3>{view.question}</h3>
+                    {next === 0 && <RiskFields risk={risk} onChange={setRisk} keys={['urgent']} />}
+                    {next === 2 && (
+                      <RiskFields
+                        risk={risk}
+                        onChange={setRisk}
+                        keys={['adult', 'pregnancy', 'highRisk']}
+                      />
+                    )}
+                    {next === 4 && (
+                      <RiskFields risk={risk} onChange={setRisk} keys={['unsafeExposure']} />
+                    )}
+                    <Field
+                      label="Your answer"
+                      hint="Say ‘unknown’ for anything you’re unsure about. Include only what you want in this transient interview."
+                    >
+                      <textarea
+                        className="textarea"
+                        rows={5}
+                        value={message}
+                        maxLength={2000}
+                        required
+                        onChange={(e) => setMessage(e.target.value)}
+                      />
+                    </Field>
+                    <label className="check-label">
+                      <input
+                        className="checkbox checkbox-sm"
+                        type="checkbox"
+                        checked={useProvider}
+                        onChange={(e) => {
+                          setUseProvider(e.target.checked);
+                          setConsent(false);
+                        }}
+                      />
+                      {demo
+                        ? 'Use simulated history extraction'
+                        : 'Use OpenAI to extract interview facts'}
+                    </label>
+                    {useProvider && (
+                      <div className="consent-note">
+                        <p className="small">
+                          {demo
+                            ? 'Demo output is simulated. No provider request is made.'
+                            : 'OpenAI receives this answer, the interview group, urgency state, and the selected pack’s allowed source facts/limitations. Other cabinet records and previous answers are not sent. Provider policies and charges apply.'}
+                        </p>
+                        <label className="check-label">
+                          <input
+                            className="checkbox checkbox-sm"
+                            type="checkbox"
+                            checked={consent}
+                            onChange={(e) => setConsent(e.target.checked)}
+                          />
+                          {demo
+                            ? 'I understand this extraction is simulated.'
+                            : 'Send this answer and selected context to OpenAI for this request.'}
+                        </label>
+                      </div>
+                    )}
+                    <button
+                      className="btn btn-primary"
+                      disabled={busy || (useProvider && !consent)}
+                    >
+                      {busy ? 'Processing…' : 'Continue interview'}
+                      <IconArrowRight size={18} />
+                    </button>
+                  </fieldset>
                 </form>
               ) : (
                 <section className="interview-summary">

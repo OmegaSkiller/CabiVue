@@ -1,7 +1,7 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { IconAlertTriangle, IconX } from '@tabler/icons-react';
 export function WarningIcon() {
-  return <IconAlertTriangle size={20} aria-hidden="true" />;
+  return <IconAlertTriangle size={20} className="warning-icon" aria-hidden="true" />;
 }
 export function ErrorMessage({ error }: { error: string }) {
   return error ? (

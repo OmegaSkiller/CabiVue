@@ -72,6 +72,7 @@ export type PackFields = z.infer<typeof packFields>;
 export type Purchase = z.infer<typeof purchaseSchema>;
 export type Product = ProductInput & {
   id: string;
+  version: number;
   prescriptionStatus: 'unknown' | 'otc' | 'prescription';
 };
 export type SourceFact = {
@@ -84,6 +85,9 @@ export type SourceFact = {
   facts: string[];
   afterOpeningDays: number | null;
   expiryConvention: 'month_end' | null;
+  permission: string;
+  reviewedAt: string | null;
+  productVersion: number;
 };
 export type Pack = PackFields & {
   id: string;

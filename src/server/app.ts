@@ -9,8 +9,9 @@ import { Store } from './db.js';
 import { Auth, credentialsSchema, type Session } from './auth.js';
 import type { Config } from './config.js';
 import { HttpError } from './errors.js';
-import { packInputSchema, packEditSchema, text } from '../contracts/inventory.js';
+import { packInputSchema, packEditSchema, productSchema, text } from '../contracts/inventory.js';
 import { Provider, MODEL_ID } from './provider.js';
+import { backupRouter } from './backups.js';
 import { assistantRouter } from './assistant.js';
 import { Imports } from './imports.js';
 import { todayIn } from '../domain/expiry.js';
@@ -55,7 +56,9 @@ export function createApp(config: Config, store = new Store(config.dataDir)) {
   });
   const smallJson = express.json({ limit: '256kb' });
   app.use('/api', (req, res, next) =>
-    /^\/imports\/[^/]+\/extract$/.test(req.path) ? next() : smallJson(req, res, next),
+    /^\/imports\/[^/]+\/extract$/.test(req.path) || req.path === '/backups/restore'
+      ? next()
+      : smallJson(req, res, next),
   );
   const loginLimit = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -117,6 +120,14 @@ export function createApp(config: Config, store = new Store(config.dataDir)) {
   app.post('/api/packs', (req, res) =>
     res.status(201).json(store.createPack(packInputSchema.parse(req.body))),
   );
+  app.put('/api/products/:id', (req, res) =>
+    res.json(
+      store.editProduct(
+        z.string().uuid().parse(req.params.id),
+        productSchema.extend({ version: z.number().int().positive() }).parse(req.body),
+      ),
+    ),
+  );
   app.put('/api/packs/:id', (req, res) =>
     res.json(
       store.editPack(z.string().uuid().parse(req.params.id), packEditSchema.parse(req.body)),
@@ -173,6 +184,7 @@ export function createApp(config: Config, store = new Store(config.dataDir)) {
   const provider = new Provider();
   const imports = new Imports(store, provider, config.demo);
   privateRoutes.use(imports.router);
+  privateRoutes.use(backupRouter(store, auth, imports));
   privateRoutes.use(assistantRouter(store, provider, config.demo));
   privateRoutes.get('/provider', (_req, res) =>
     res.json({

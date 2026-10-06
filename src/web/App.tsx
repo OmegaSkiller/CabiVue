@@ -26,6 +26,7 @@ import { UrgentHelp } from './components/UrgentHelp';
 import { AssistantScreen } from './components/AssistantScreen';
 import { ScanScreen } from './components/ScanScreen';
 import { ProviderSettings } from './components/ProviderSettings';
+import { BackupSettings } from './components/BackupSettings';
 import { SettingsScreen } from './components/SettingsScreen';
 import { ErrorMessage, WarningIcon, Dialog } from './components/common';
 export type Inventory = {
@@ -53,15 +54,18 @@ export default function App() {
   const [notice, setNotice] = useState('');
   const [tab, setTab] = useState('cabinet');
   const [scanDirty, setScanDirty] = useState(false);
+  const [backupDirty, setBackupDirty] = useState(false);
   const [settingsDirty, setSettingsDirty] = useState(false);
   const [providerDirty, setProviderDirty] = useState(false);
   const [assistantDirty, setAssistantDirty] = useState(false);
   const [urgentOpen, setUrgentOpen] = useState(false);
 
   function navigate(next: string) {
+    if (next === tab) return;
     if (next !== tab && dirty && !window.confirm('Discard your unsaved edits or active review?'))
       return;
     setScanDirty(false);
+    setBackupDirty(false);
     setSettingsDirty(false);
     setProviderDirty(false);
     setAssistantDirty(false);
@@ -73,7 +77,12 @@ export default function App() {
   const [location, setLocation] = useState('');
   const [editing, setEditing] = useState<Pack | null | undefined>();
   const dirty =
-    editing !== undefined || scanDirty || settingsDirty || providerDirty || assistantDirty;
+    editing !== undefined ||
+    scanDirty ||
+    settingsDirty ||
+    providerDirty ||
+    assistantDirty ||
+    backupDirty;
   const [online, setOnline] = useState(navigator.onLine);
   const [dark, setDark] = useState(() => localStorage.getItem('cabivue-theme') === 'cabivue-dark');
   useEffect(() => {
@@ -150,6 +159,8 @@ export default function App() {
       setCsrf(null);
       setData(null);
       setEditing(undefined);
+      setBackupDirty(false);
+      setAssistantDirty(false);
       setScanDirty(false);
       setSettingsDirty(false);
       setProviderDirty(false);
@@ -246,6 +257,11 @@ export default function App() {
     return (
       <>
         <ErrorMessage error={error} />
+        {notice && (
+          <p className="save-notice" role="status">
+            {notice}
+          </p>
+        )}
         <AuthScreen
           configured={auth.configured}
           demo={auth.demo}
@@ -458,6 +474,28 @@ export default function App() {
               onSaved={() => void refresh()}
               onDirty={setSettingsDirty}
             >
+              <BackupSettings
+                onDirty={setBackupDirty}
+                canRestore={
+                  !settingsDirty &&
+                  !providerDirty &&
+                  !scanDirty &&
+                  !assistantDirty &&
+                  editing === undefined
+                }
+                onRestored={(recoveryPoint) => {
+                  setCsrf(null);
+                  setData(null);
+                  setBackupDirty(false);
+                  setSettingsDirty(false);
+                  setProviderDirty(false);
+                  setTab('cabinet');
+                  setNotice(
+                    `Cabinet restored. Sign in again. Your previous cabinet is saved as ${recoveryPoint} in Settings → Backup & recovery.`,
+                  );
+                  setAuth((a) => (a ? { ...a, authenticated: false } : a));
+                }}
+              />
               <ProviderSettings onDirty={setProviderDirty} />
               <section className="card section-card">
                 <h2>Household account</h2>
@@ -721,6 +759,7 @@ export default function App() {
       {editing !== undefined && (
         <PackEditor
           pack={editing}
+          onProductSaved={() => void refresh()}
           products={data.products}
           locations={data.locations}
           onClose={() => setEditing(undefined)}

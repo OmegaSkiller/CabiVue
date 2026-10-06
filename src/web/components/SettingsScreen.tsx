@@ -40,6 +40,7 @@ export function SettingsScreen({
   }
   async function addLocation(e: FormEvent) {
     e.preventDefault();
+    setBusy(true);
     setError('');
     try {
       await api('/locations', send('POST', { name: location }));
@@ -48,6 +49,8 @@ export function SettingsScreen({
       setMessage('Storage location added.');
     } catch (e) {
       setError((e as Error).message);
+    } finally {
+      setBusy(false);
     }
   }
   return (
@@ -64,36 +67,38 @@ export function SettingsScreen({
           </p>
         )}
         <form onSubmit={save}>
-          <Field label="Timezone">
-            <input
-              className="input"
-              value={values.timezone}
-              onChange={(e) => setValues({ ...values, timezone: e.target.value })}
-              required
-              placeholder="Europe/Sofia"
-            />
-          </Field>
-          <Field
-            label="Emergency contact"
-            hint="Enter a confirmed local number or instruction. Cabivue does not guess emergency numbers."
-          >
-            <input
-              className="input"
-              value={values.emergencyContact}
-              onChange={(e) => setValues({ ...values, emergencyContact: e.target.value })}
-            />
-          </Field>
-          <Field label="Emergency contact location">
-            <input
-              className="input"
-              value={values.emergencyLocation}
-              onChange={(e) => setValues({ ...values, emergencyLocation: e.target.value })}
-              placeholder="Country or region"
-            />
-          </Field>
-          <button className="btn btn-primary" disabled={busy}>
-            {busy ? 'Saving…' : 'Save household settings'}
-          </button>
+          <fieldset disabled={busy}>
+            <Field label="Timezone">
+              <input
+                className="input"
+                value={values.timezone}
+                onChange={(e) => setValues({ ...values, timezone: e.target.value })}
+                required
+                placeholder="Europe/Sofia"
+              />
+            </Field>
+            <Field
+              label="Emergency contact"
+              hint="Enter a confirmed local number or instruction. Cabivue does not guess emergency numbers."
+            >
+              <input
+                className="input"
+                value={values.emergencyContact}
+                onChange={(e) => setValues({ ...values, emergencyContact: e.target.value })}
+              />
+            </Field>
+            <Field label="Emergency contact location">
+              <input
+                className="input"
+                value={values.emergencyLocation}
+                onChange={(e) => setValues({ ...values, emergencyLocation: e.target.value })}
+                placeholder="Country or region"
+              />
+            </Field>
+            <button className="btn btn-primary" disabled={busy}>
+              {busy ? 'Saving…' : 'Save household settings'}
+            </button>
+          </fieldset>
         </form>
       </section>
       <section className="card section-card">
@@ -108,17 +113,19 @@ export function SettingsScreen({
           {!locations.length && <p className="small muted">No locations yet.</p>}
         </div>
         <form onSubmit={addLocation}>
-          <Field label="New location">
-            <input
-              className="input"
-              value={location}
-              maxLength={300}
-              onChange={(e) => setLocation(e.target.value)}
-              required
-              placeholder="e.g. Hallway cupboard"
-            />
-          </Field>
-          <button className="btn btn-outline">Add location</button>
+          <fieldset disabled={busy}>
+            <Field label="New location">
+              <input
+                className="input"
+                value={location}
+                maxLength={300}
+                onChange={(e) => setLocation(e.target.value)}
+                required
+                placeholder="e.g. Hallway cupboard"
+              />
+            </Field>
+            <button className="btn btn-outline">Add location</button>
+          </fieldset>
         </form>
       </section>
       {children}

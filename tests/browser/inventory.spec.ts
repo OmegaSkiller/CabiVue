@@ -12,6 +12,9 @@ test('missing expiry review, responsive layouts, keyboard forms and both themes'
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
     ).toBe(true);
     await expect(page.getByRole('button', { name: 'Add medicine', exact: true })).toBeVisible();
+    expect(
+      (await page.locator('.missing-alert > svg').boundingBox())!.width,
+    ).toBeGreaterThanOrEqual(20);
   }
   await page.setViewportSize({ width: 1440, height: 1080 });
   await expect(

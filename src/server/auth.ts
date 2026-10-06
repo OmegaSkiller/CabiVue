@@ -38,12 +38,22 @@ export type Session = {
 };
 export class Auth {
   readonly transient = new Map<string, Session>();
+  private expiryTimers = new Map<string, ReturnType<typeof setTimeout>>();
   constructor(
     private store: Store,
     private config: Config,
   ) {}
   configured() {
     return !!this.store.db.prepare('SELECT 1 FROM account WHERE id=1').get();
+  }
+  private remember(session: Session) {
+    this.transient.set(session.hash, session);
+    const timer = setTimeout(
+      () => this.destroy(session.hash),
+      Math.max(0, session.expiresAt - Date.now()),
+    );
+    timer.unref();
+    this.expiryTimers.set(session.hash, timer);
   }
   async bootstrap(secret: string, credentials: z.infer<typeof credentialsSchema>) {
     if (!this.config.bootstrapSecret || digest(secret) !== digest(this.config.bootstrapSecret))
@@ -77,7 +87,7 @@ export class Auth {
     let session = this.transient.get(hash);
     if (!session) {
       session = { hash, csrf: row.csrf, expiresAt: row.expires_at };
-      this.transient.set(hash, session);
+      this.remember(session);
     }
     return session;
   }
@@ -119,7 +129,7 @@ export class Auth {
     this.store.db
       .prepare('INSERT INTO sessions VALUES(?,1,?,?)')
       .run(session.hash, session.csrf, session.expiresAt);
-    this.transient.set(session.hash, session);
+    this.remember(session);
     res.cookie('cabivue_session', token, {
       httpOnly: true,
       secure: this.config.secureCookies,
@@ -130,6 +140,8 @@ export class Auth {
     return session;
   }
   destroy(hash: string) {
+    clearTimeout(this.expiryTimers.get(hash));
+    this.expiryTimers.delete(hash);
     const state = this.transient.get(hash);
     if (state) {
       state.providerAbort?.abort();

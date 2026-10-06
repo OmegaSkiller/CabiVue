@@ -210,6 +210,11 @@ export class Imports {
       status: r.status,
     };
   }
+  hasActiveDrafts(): boolean {
+    return !!this.store.db
+      .prepare("SELECT 1 FROM import_drafts WHERE status IN('ready','processing') AND expires_at>?")
+      .get(Date.now());
+  }
   cleanup() {
     for (const [id, c] of this.running) {
       const r = this.store.db

@@ -1,16 +1,11 @@
 import { useState, type FormEvent } from 'react';
 import { api, send } from '../api';
-import type { Pack, PackFields, Location, Product, ProductInput } from '../../contracts/inventory';
+import type { Pack, PackFields, Location, Product } from '../../contracts/inventory';
+import { ProductFields, initialProduct } from './ProductFields';
+export { ProductFields, initialProduct } from './ProductFields';
+import { ProductEditor } from './ProductEditor';
+import { reviewedSources } from '../../domain/expiry';
 import { Dialog, ErrorMessage, Field, WarningIcon } from './common';
-export const initialProduct: ProductInput = {
-  name: '',
-  country: 'BG',
-  form: null,
-  route: null,
-  ingredientText: null,
-  identityConfirmed: false,
-  ingredients: [],
-};
 export const initialFields: PackFields = {
   quantity: 1,
   unit: 'pack',
@@ -174,139 +169,16 @@ export function PackFieldsForm({
     </>
   );
 }
-export function ProductFields({
-  product,
-  onChange,
-}: {
-  product: ProductInput;
-  onChange: (p: ProductInput) => void;
-}) {
-  return (
-    <>
-      <Field label="Medicine name">
-        <input
-          className="input"
-          required
-          maxLength={300}
-          value={product.name}
-          onChange={(e) => onChange({ ...product, name: e.target.value })}
-          placeholder="As printed on the package"
-        />
-      </Field>
-      <div className="form-grid">
-        <Field label="Country">
-          <input
-            className="input"
-            required
-            maxLength={300}
-            value={product.country}
-            onChange={(e) => onChange({ ...product, country: e.target.value })}
-          />
-        </Field>
-        <Field label="Form">
-          <input
-            className="input"
-            maxLength={300}
-            value={product.form || ''}
-            onChange={(e) => onChange({ ...product, form: e.target.value || null })}
-            placeholder="e.g. tablets"
-          />
-        </Field>
-      </div>
-      <Field label="Route">
-        <input
-          className="input"
-          maxLength={300}
-          value={product.route || ''}
-          onChange={(e) => onChange({ ...product, route: e.target.value || null })}
-          placeholder="Leave blank if unknown"
-        />
-      </Field>
-      <Field label="Ingredient / strength text">
-        <input
-          className="input"
-          maxLength={300}
-          value={product.ingredientText || ''}
-          onChange={(e) => onChange({ ...product, ingredientText: e.target.value || null })}
-          placeholder="Copy visible text; don’t infer it"
-        />
-      </Field>
-      <details className="ingredient-details">
-        <summary>Record individual ingredients</summary>
-        {product.ingredients.map((i, index) => (
-          <div className="ingredient-row" key={index}>
-            {(['name', 'strength', 'unit', 'basis'] as const).map((k) => (
-              <Field key={k} label={`${k[0].toUpperCase() + k.slice(1)} ${index + 1}`}>
-                <input
-                  className="input"
-                  required={k === 'name'}
-                  maxLength={300}
-                  value={i[k] || ''}
-                  onChange={(e) =>
-                    onChange({
-                      ...product,
-                      ingredients: product.ingredients.map((item, n) =>
-                        n === index
-                          ? { ...item, [k]: e.target.value || (k === 'name' ? '' : null) }
-                          : item,
-                      ),
-                    })
-                  }
-                />
-              </Field>
-            ))}
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={() =>
-                onChange({
-                  ...product,
-                  ingredients: product.ingredients.filter((_, n) => n !== index),
-                })
-              }
-            >
-              Remove ingredient {index + 1}
-            </button>
-          </div>
-        ))}
-        <button
-          type="button"
-          className="btn btn-outline"
-          disabled={product.ingredients.length >= 12}
-          onClick={() =>
-            onChange({
-              ...product,
-              ingredients: [
-                ...product.ingredients,
-                { name: '', strength: null, unit: null, basis: null },
-              ],
-            })
-          }
-        >
-          Add ingredient
-        </button>
-      </details>
-      <label className="check-label">
-        <input
-          className="checkbox checkbox-sm"
-          type="checkbox"
-          checked={product.identityConfirmed}
-          onChange={(e) => onChange({ ...product, identityConfirmed: e.target.checked })}
-        />
-        I checked this identity against the package
-      </label>
-      <p className="small muted">Checking the label does not verify medical information.</p>
-    </>
-  );
-}
 export function PackEditor({
   pack,
   products,
   locations,
   onSaved,
   onClose,
+  onProductSaved,
 }: {
   pack: Pack | null;
+  onProductSaved: () => void;
   products: Product[];
   locations: Location[];
   onSaved: () => void;
@@ -326,6 +198,8 @@ export function PackEditor({
         notes: pack.notes,
       }
     : initialFields;
+  const [identity, setIdentity] = useState(pack?.product);
+  const [editIdentity, setEditIdentity] = useState(false);
   const [fields, setFields] = useState(seed);
   const [product, setProduct] = useState(initialProduct);
   const [productId, setProductId] = useState('');
@@ -362,26 +236,31 @@ export function PackEditor({
     }
   }
   return (
-    <Dialog title={pack ? pack.product.name : 'Add medicine'} onClose={close}>
+    <Dialog title={identity ? identity.name : 'Add medicine'} onClose={close}>
       <form onSubmit={submit}>
         <fieldset disabled={busy}>
           <ErrorMessage error={error} />
           {pack ? (
             <div className="pack-identity">
               <p>
-                {[pack.product.form, pack.product.ingredientText].filter(Boolean).join(' · ') ||
+                {[identity?.form, identity?.ingredientText].filter(Boolean).join(' · ') ||
                   'Formulation not recorded'}
               </p>
               <span className="badge badge-outline">
-                {pack.product.identityConfirmed
-                  ? 'Identity checked by you'
-                  : 'Identity unconfirmed'}
+                {identity?.identityConfirmed ? 'Identity checked by you' : 'Identity unconfirmed'}
               </span>
               <p className="small muted">
-                {pack.sourceFacts.some((s) => s.reviewStatus === 'reviewed')
+                {reviewedSources({ ...pack, product: identity || pack.product }).length > 0
                   ? 'Reviewed source information available.'
                   : 'No reviewed leaflet information.'}
               </p>
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => setEditIdentity(true)}
+              >
+                Edit shared product
+              </button>
               {pack.purchase && (
                 <p className="small">
                   Purchased {pack.purchase.date || 'date unknown'} ·{' '}
@@ -422,6 +301,17 @@ export function PackEditor({
           </div>
         </fieldset>
       </form>
+      {editIdentity && identity && (
+        <ProductEditor
+          product={identity}
+          onClose={() => setEditIdentity(false)}
+          onSaved={(updated) => {
+            setIdentity(updated);
+            setEditIdentity(false);
+            onProductSaved();
+          }}
+        />
+      )}
     </Dialog>
   );
 }

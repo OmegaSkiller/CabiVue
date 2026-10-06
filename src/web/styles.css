@@ -124,6 +124,9 @@
     gap: 8px;
     color: var(--color-warning);
   }
+  .warning-icon {
+    flex-shrink: 0;
+  }
   .warning-copy {
     display: flex;
     gap: 8px;

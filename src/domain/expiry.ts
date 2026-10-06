@@ -29,9 +29,18 @@ export function expiryState(
   if (pack.expiryValue < today) return 'expired';
   return pack.expiryValue <= plusDays(today, 30) ? 'soon' : 'recorded';
 }
+export function reviewedSources(pack: Pick<Pack, 'sourceFacts' | 'product'>) {
+  return pack.sourceFacts.filter(
+    (s) =>
+      s.reviewStatus === 'reviewed' &&
+      s.productVersion === pack.product.version &&
+      s.permission.trim() &&
+      s.reviewedAt,
+  );
+}
 export function guidanceBlocks(pack: Pack, today: string): string[] {
   const blocks: string[] = [];
-  const source = pack.sourceFacts.find((s) => s.reviewStatus === 'reviewed');
+  const source = reviewedSources(pack)[0];
   if (!pack.product.identityConfirmed) blocks.push('Product identity has not been confirmed.');
   if (!source) blocks.push('No reviewed leaflet information is available for this exact product.');
   const state = expiryState(pack, today);

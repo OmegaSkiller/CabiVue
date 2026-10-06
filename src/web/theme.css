@@ -1,6 +1,6 @@
-/* Cabivue: Tailwind CSS 4 + daisyUI 5.
-   Keep this file beside fonts/ so the self-hosted font URLs resolve. */
-@import 'tailwindcss';
+/* Cabivue: Tailwind CSS 4 + daisyUI 5, with self-hosted public fonts. */
+@import 'tailwindcss' source(none);
+@source './';
 @plugin "daisyui" {
   themes: false;
 }

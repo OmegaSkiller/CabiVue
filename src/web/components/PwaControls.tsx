@@ -7,14 +7,16 @@ type InstallEvent = Event & {
 };
 let update: ((reloadPage?: boolean) => Promise<void>) | undefined;
 let notifyUpdate: (() => void) | undefined;
+let waitingUpdate = false;
 if (import.meta.env.PROD)
   update = registerSW({
     onNeedRefresh() {
+      waitingUpdate = true;
       notifyUpdate?.();
     },
   });
 export function PwaControls({ blocked }: { blocked: boolean }) {
-  const [available, setAvailable] = useState(false);
+  const [available, setAvailable] = useState(waitingUpdate);
   const [install, setInstall] = useState<InstallEvent | null>(null);
   useEffect(() => {
     notifyUpdate = () => setAvailable(true);

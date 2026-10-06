@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { IconArrowRight, IconNotes } from '@tabler/icons-react';
 import type { IntakeView, Risk, ReportedGroup } from '../../contracts/assistant';
 import type { Pack } from '../../contracts/inventory';
+import { reviewedSources } from '../../domain/expiry';
 import { api, send } from '../api';
 import { Field, ErrorMessage, WarningIcon } from './common';
 const riskLabels: Record<keyof Risk, string> = {
@@ -371,27 +372,25 @@ export function AssistantScreen({
                 ))}
               </>
             ) : (
-              facts.pack.sourceFacts
-                .filter((s) => s.reviewStatus === 'reviewed')
-                .map((s) => (
-                  <div key={s.id}>
-                    <p className="small">
-                      Reviewed general leaflet facts do not establish suitability for a person.
-                    </p>
-                    {s.facts.map((f, i) => (
-                      <p key={i}>{f}</p>
-                    ))}
-                    <a
-                      href={s.officialUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="source-link"
-                    >
-                      Official source · {s.revision}
-                    </a>
-                    <p className="small muted">{s.provenance}</p>
-                  </div>
-                ))
+              reviewedSources(facts.pack).map((s) => (
+                <div key={s.id}>
+                  <p className="small">
+                    Reviewed general leaflet facts do not establish suitability for a person.
+                  </p>
+                  {s.facts.map((f, i) => (
+                    <p key={i}>{f}</p>
+                  ))}
+                  <a
+                    href={s.officialUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="source-link"
+                  >
+                    Official source · {s.revision}
+                  </a>
+                  <p className="small muted">{s.provenance}</p>
+                </div>
+              ))
             )}
           </div>
         )}

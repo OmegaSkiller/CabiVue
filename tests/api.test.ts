@@ -1,4 +1,4 @@
-import { beforeEach, afterEach, it, expect } from 'vitest';
+import { beforeEach, afterEach, it, expect, vi } from 'vitest';
 import request from 'supertest';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -22,7 +22,20 @@ beforeEach(() => {
 });
 afterEach(() => {
   instance.close();
+  vi.useRealTimers();
   rmSync(dir, { recursive: true, force: true });
+});
+it('clears idle session secrets and aborts provider work at the expiry deadline', async () => {
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+  await login();
+  const session = [...instance.auth.transient.values()][0];
+  session.providerKey = 'synthetic-session-key';
+  session.providerAbort = new AbortController();
+  vi.advanceTimersByTime(12 * 3600000);
+  expect(session.providerKey).toBeUndefined();
+  expect(session.providerAbort.signal.aborted).toBe(true);
+  expect(instance.auth.transient.size).toBe(0);
+  expect(instance.store.db.prepare('SELECT 1 FROM sessions').all()).toHaveLength(0);
 });
 async function login() {
   const agent = request.agent(instance.app);
@@ -86,7 +99,7 @@ it('keeps two physical packs independent and detects stale edits', async () => {
     unit: 'tablet',
     expiryValue: null,
     expiryPrecision: 'unknown',
-    version: 1,
+    version: a.body.version,
   };
   await agent
     .put(`/api/packs/${a.body.id}`)

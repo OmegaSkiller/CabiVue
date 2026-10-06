@@ -464,5 +464,12 @@
   "evidence.missing": "लापता",
   "kind.unknown": "अज्ञात / निश्चित नहीं",
   "field.packageCount": "पैकेज का आकार",
-  "field.expiryMarker": "मुद्रित समाप्ति पाठ"
+  "field.expiryMarker": "मुद्रित समाप्ति पाठ",
+  "Public demo": "सार्वजनिक डेमो",
+  "Changes stay in this tab and reset on reload. Use synthetic data only.": "बदलाव केवल इस टैब में रहते हैं और पेज फिर लोड करने पर मिट जाते हैं। केवल काल्पनिक डेटा का उपयोग करें।",
+  "Reset demo": "डेमो रीसेट करें",
+  "Reset this demo and discard all changes?": "डेमो रीसेट करके सभी बदलाव मिटाएँ?",
+  "Explore demo": "डेमो देखें",
+  "Demo limitations": "डेमो की सीमाएँ",
+  "Server backups and provider keys are available in the self-hosted app. This demo only simulates scans and interviews.": "सर्वर बैकअप और API कुंजियाँ स्वयं होस्ट किए गए ऐप में उपलब्ध हैं। यह डेमो केवल स्कैन और साक्षात्कार का अनुकरण करता है।"
 }

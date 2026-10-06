@@ -10,7 +10,7 @@ external deployment.
 | Proof                                        | Result                                                                            |
 | -------------------------------------------- | --------------------------------------------------------------------------------- |
 | TypeScript, production frontend/server build | Passed                                                                            |
-| Vitest domain/API/provider tests             | 34 passed                                                                         |
+| Vitest domain/API/provider tests             | 37 passed                                                                         |
 | Playwright browser flows                     | 6 passed                                                                          |
 | Production service-worker browser flow       | 1 passed                                                                          |
 | Layout widths                                | 320, 360, 390, 768, 1024, 1440 px                                                 |
@@ -41,7 +41,7 @@ runs three gates on pushes and pull requests: checks, browser/PWA, and container
 Actions are pinned to release commits and repository permissions are read-only.
 The container gate builds/runs on Ubuntu Linux AMD64 and checks persistent data
 after replacement. Its per-commit result is separate from local ARM64 proof;
-inspect the green run for the commit being reviewed. There is no deployment job.
+inspect the green run for the commit being reviewed. A separate Pages deployment job publishes only the verified static synthetic demo after all three gates pass. The self-hosted application is not deployed.
 
 Reproduce with the commands in the README. Docker checks create unique disposable
 containers/volumes and remove them in `finally`; browser checks use temporary
@@ -63,3 +63,10 @@ form/scan/interview draft retention, and layouts at 320/390/1440 px. The product
 PWA switches languages and retains its preference after an offline reload.
 Translation accuracy has not received comprehensive native-speaker or clinical
 review; see [localization](localization.md).
+
+Public demo verification uses a static server at `/CabiVue/` without Express or
+SQLite. Tests cover independent tabs, response isolation, stale edits, atomic and
+idempotent simulated imports, fixed urgency, hidden key/backup forms, reload/reset,
+asset and manifest paths, narrow layouts, accessibility and offline loading.
+No API or provider requests are made. Publication status is confirmed separately
+by the Pages job and live-site check.

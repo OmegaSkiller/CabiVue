@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import sharp from 'sharp';
 import { createApp } from '../src/server/app.js';
-import { simulatedExtraction } from '../src/server/simulation.js';
+import { simulatedExtraction } from '../src/domain/simulation.js';
 import { Provider } from '../src/server/provider.js';
 import { normalizeImages } from '../src/server/media.js';
 import { reviewExtraction } from '../src/domain/imports.js';

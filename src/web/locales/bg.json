@@ -464,5 +464,12 @@
   "evidence.missing": "Липсва",
   "kind.unknown": "Неизвестен / не съм сигурен",
   "field.packageCount": "Брой в опаковката",
-  "field.expiryMarker": "Обозначение за срок на годност"
+  "field.expiryMarker": "Обозначение за срок на годност",
+  "Public demo": "Публична демонстрация",
+  "Changes stay in this tab and reset on reload. Use synthetic data only.": "Промените остават само в този раздел и се изчистват при презареждане. Използвайте само синтетични данни.",
+  "Reset demo": "Нулиране на демонстрацията",
+  "Reset this demo and discard all changes?": "Да се нулира ли демонстрацията и да се изтрият всички промени?",
+  "Explore demo": "Разгледайте демонстрацията",
+  "Demo limitations": "Ограничения на демонстрацията",
+  "Server backups and provider keys are available in the self-hosted app. This demo only simulates scans and interviews.": "Резервните копия на сървъра и API ключовете са налични в самостоятелно хостваното приложение. Тази демонстрация само симулира сканиране и интервюта."
 }

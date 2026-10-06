@@ -13,3 +13,5 @@ playwright-report-pwa/
 test-results/
 .DS_Store
 coverage/
+
+playwright-report-pages/

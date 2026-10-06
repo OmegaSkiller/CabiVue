@@ -464,5 +464,12 @@
   "evidence.missing": "失踪",
   "kind.unknown": "未知/不确定",
   "field.packageCount": "包装尺寸",
-  "field.expiryMarker": "打印的到期文本"
+  "field.expiryMarker": "打印的到期文本",
+  "Public demo": "公开演示",
+  "Changes stay in this tab and reset on reload. Use synthetic data only.": "更改仅保留在此标签页中，刷新后会重置。请仅使用虚构数据。",
+  "Reset demo": "重置演示",
+  "Reset this demo and discard all changes?": "重置演示并丢弃所有更改？",
+  "Explore demo": "体验演示",
+  "Demo limitations": "演示限制",
+  "Server backups and provider keys are available in the self-hosted app. This demo only simulates scans and interviews.": "服务器备份和 API 密钥功能可在自托管应用中使用。此演示仅模拟扫描和访谈。"
 }

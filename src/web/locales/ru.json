@@ -484,5 +484,12 @@
   "unit.dose_few": "{{amount}} дозы",
   "unit.dose_many": "{{amount}} доз",
   "unit.sachet_few": "{{amount}} пакетика",
-  "unit.sachet_many": "{{amount}} пакетиков"
+  "unit.sachet_many": "{{amount}} пакетиков",
+  "Public demo": "Публичная демоверсия",
+  "Changes stay in this tab and reset on reload. Use synthetic data only.": "Изменения остаются в этой вкладке и удаляются при перезагрузке. Используйте только вымышленные данные.",
+  "Reset demo": "Сбросить демоверсию",
+  "Reset this demo and discard all changes?": "Сбросить демоверсию и удалить все изменения?",
+  "Explore demo": "Открыть демоверсию",
+  "Demo limitations": "Ограничения демоверсии",
+  "Server backups and provider keys are available in the self-hosted app. This demo only simulates scans and interviews.": "Серверные резервные копии и API-ключи доступны в приложении на собственном сервере. Демоверсия лишь имитирует сканирование и интервью."
 }

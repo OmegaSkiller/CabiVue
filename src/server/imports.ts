@@ -8,7 +8,7 @@ import { normalizeImages } from './media.js';
 import { Provider } from './provider.js';
 import { reviewExtraction } from '../domain/imports.js';
 import { confirmationSchema, type Draft, type Extraction } from '../contracts/imports.js';
-import { simulatedExtraction } from './simulation.js';
+import { simulatedExtraction } from '../domain/simulation.js';
 type DraftRow = {
   id: string;
   account_id: number;

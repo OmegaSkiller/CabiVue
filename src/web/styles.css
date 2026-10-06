@@ -1161,3 +1161,16 @@
     }
   }
 }
+@layer utilities {
+  .public-demo-alert {
+    margin-block-end: 20px;
+    flex-wrap: wrap;
+  }
+  .public-demo-alert > div {
+    flex: 1;
+    min-width: 180px;
+  }
+  .public-demo-alert p {
+    margin: 4px 0 0;
+  }
+}

@@ -464,5 +464,12 @@
   "evidence.missing": "Missing",
   "kind.unknown": "Unknown / not sure",
   "field.packageCount": "Package size",
-  "field.expiryMarker": "Printed expiry text"
+  "field.expiryMarker": "Printed expiry text",
+  "Public demo": "Public demo",
+  "Changes stay in this tab and reset on reload. Use synthetic data only.": "Changes stay in this tab and reset on reload. Use synthetic data only.",
+  "Reset demo": "Reset demo",
+  "Reset this demo and discard all changes?": "Reset this demo and discard all changes?",
+  "Explore demo": "Explore demo",
+  "Demo limitations": "Demo limitations",
+  "Server backups and provider keys are available in the self-hosted app. This demo only simulates scans and interviews.": "Server backups and provider keys are available in the self-hosted app. This demo only simulates scans and interviews."
 }

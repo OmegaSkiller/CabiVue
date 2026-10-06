@@ -21,7 +21,10 @@
     "demo": "tsx scripts/demo.ts",
     "setup": "tsx scripts/setup.ts",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "build:demo": "tsc --noEmit && vite build --mode pages",
+    "preview:demo": "vite preview --mode pages --host 127.0.0.1 --port 5176 --strictPort",
+    "test:pages": "npm run build:demo && playwright test --config playwright.pages.config.ts"
   },
   "dependencies": {
     "@tabler/icons-react": "3.49.0",

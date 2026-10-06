@@ -3,7 +3,7 @@
 **Know what you have.** A self-hosted household medicine cabinet. Track physical packs and dates, review scanned labels, and prepare questions for a pharmacist or doctor.
 
 [![CI](https://github.com/OmegaSkiller/CabiVue/actions/workflows/ci.yml/badge.svg)](https://github.com/OmegaSkiller/CabiVue/actions/workflows/ci.yml)
-[MIT license](LICENSE) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
+[Try the public demo](https://omegaskiller.github.io/CabiVue/) · [MIT license](LICENSE) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
 Cabivue is an early open-source release for one household per instance. Inventory works without AI. The optional assistant collects a transient history and displays reviewed general facts when available; it does not diagnose, select treatments, or generate doses. No real medicine catalog is bundled. [Scope and privacy](docs/privacy-and-scope.md) describe the boundaries.
 
@@ -49,7 +49,11 @@ For phone access, put the service behind an HTTPS reverse proxy. Set `CABIVUE_PU
 
 See [operations](docs/operations.md) for backup, restore, upgrades, HTTPS configuration, and volume retention. Local ARM64 and GitHub Linux AMD64 container checks are tracked separately in [verification](docs/verification.md).
 
-## Synthetic demo
+## Public demo
+
+[Open the GitHub Pages demo](https://omegaskiller.github.io/CabiVue/). Changes stay in your current tab and reset on reload. Use synthetic data only; scans and interviews are simulated, with no API keys or backend. See [public demo setup and limitations](docs/public-demo.md).
+
+## Synthetic self-hosted demo
 
 After `npm ci`, run:
 
@@ -72,6 +76,7 @@ Tests and demo mode make no billable calls. Live OCR quality and clinical behavi
 npm run check
 npm run test:e2e
 npm run test:pwa
+npm run test:pages
 npm run format:check
 npm audit
 docker build -t cabivue:verification .

@@ -504,5 +504,12 @@
   "unit.sachet_zero": "{{amount}} كيس",
   "unit.sachet_two": "{{amount}} كيسان",
   "unit.sachet_few": "{{amount}} أكياس",
-  "unit.sachet_many": "{{amount}} كيس"
+  "unit.sachet_many": "{{amount}} كيس",
+  "Public demo": "عرض تجريبي عام",
+  "Changes stay in this tab and reset on reload. Use synthetic data only.": "تبقى التغييرات في علامة التبويب هذه وتُحذف عند إعادة التحميل. استخدم بيانات خيالية فقط.",
+  "Reset demo": "إعادة ضبط العرض",
+  "Reset this demo and discard all changes?": "هل تريد إعادة ضبط العرض وحذف جميع التغييرات؟",
+  "Explore demo": "استكشف العرض",
+  "Demo limitations": "حدود العرض التجريبي",
+  "Server backups and provider keys are available in the self-hosted app. This demo only simulates scans and interviews.": "تتوفر النسخ الاحتياطية للخادم ومفاتيح API في التطبيق المستضاف ذاتيًا. هذا العرض يحاكي عمليات المسح والمقابلات فقط."
 }

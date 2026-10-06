@@ -1,3 +1,4 @@
+import { asset } from '../environment';
 import { t } from '../i18n';
 import type { Settings } from '../../contracts/inventory';
 import { WarningIcon } from './common';
@@ -14,7 +15,7 @@ export function UrgentHelp({
   return (
     <main className="urgent-screen">
       <img
-        src={dark ? '/brand/cabivue-logo-reversed.svg' : '/brand/cabivue-logo.svg'}
+        src={asset(dark ? 'brand/cabivue-logo-reversed.svg' : 'brand/cabivue-logo.svg')}
         className="logo"
         alt="Cabivue"
       />

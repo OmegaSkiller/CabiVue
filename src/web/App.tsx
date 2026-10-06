@@ -1,3 +1,4 @@
+import { asset, publicDemo } from './environment';
 import { useTranslation } from 'react-i18next';
 import { LanguagePicker } from './components/LanguagePicker';
 import { t, number, date, quantity } from './i18n';
@@ -257,7 +258,7 @@ export default function App() {
   if (!auth)
     return (
       <main className="loading-page">
-        <img className="logo" src="/brand/cabivue-logo.svg" alt="Cabivue" />
+        <img className="logo" src={asset('brand/cabivue-logo.svg')} alt="Cabivue" />
         <LanguagePicker />
         <p role="status">{t('Opening your cabinet…')}</p>
         <button className="btn btn-outline" onClick={() => setUrgentOpen(true)}>
@@ -344,10 +345,10 @@ export default function App() {
         {t('Skip to content')}
       </a>
       <header className="topbar">
-        <a href="/" className="brand-link">
+        <a href={import.meta.env.BASE_URL} className="brand-link">
           <img
             className="logo"
-            src={dark ? '/brand/cabivue-logo-reversed.svg' : '/brand/cabivue-logo.svg'}
+            src={asset(dark ? 'brand/cabivue-logo-reversed.svg' : 'brand/cabivue-logo.svg')}
             alt="Cabivue"
           />
         </a>
@@ -395,7 +396,7 @@ export default function App() {
             </button>
           ))}
           <div className="nav-note">
-            <img src="/brand/cabivue-mark.svg" alt="" width={30} />
+            <img src={asset('brand/cabivue-mark.svg')} alt="" width={30} />
             <p>
               {t('A little order.')} <br />
               {t('A clearer day.')}
@@ -403,6 +404,23 @@ export default function App() {
           </div>
         </nav>
         <main id="main" className="main-content">
+          {publicDemo && (
+            <div className="alert public-demo-alert" role="status">
+              <div>
+                <strong>{t('Public demo')}</strong>
+                <p>{t('Changes stay in this tab and reset on reload. Use synthetic data only.')}</p>
+              </div>
+              <button
+                className="btn btn-outline"
+                onClick={() => {
+                  if (window.confirm(t('Reset this demo and discard all changes?')))
+                    window.location.reload();
+                }}
+              >
+                {t('Reset demo')}
+              </button>
+            </div>
+          )}
           {auth.demo && (
             <div className="alert alert-info demo-banner">
               {t('Synthetic demo. Simulated provider results; no real medicine information.')}
@@ -494,30 +512,44 @@ export default function App() {
               onSaved={() => void refresh()}
               onDirty={setSettingsDirty}
             >
-              <BackupSettings
-                onDirty={setBackupDirty}
-                canRestore={
-                  !settingsDirty &&
-                  !providerDirty &&
-                  !scanDirty &&
-                  !assistantDirty &&
-                  editing === undefined
-                }
-                onRestored={(recoveryPoint) => {
-                  setCsrf(null);
-                  setData(null);
-                  setBackupDirty(false);
-                  setSettingsDirty(false);
-                  setProviderDirty(false);
-                  setTab('cabinet');
-                  setNotice(
-                    'Cabinet restored. Sign in again. Your previous cabinet is saved as {{name}} in Settings → Backup & recovery.',
-                    { name: recoveryPoint },
-                  );
-                  setAuth((a) => (a ? { ...a, authenticated: false } : a));
-                }}
-              />
-              <ProviderSettings onDirty={setProviderDirty} />
+              {!publicDemo && (
+                <>
+                  <BackupSettings
+                    onDirty={setBackupDirty}
+                    canRestore={
+                      !settingsDirty &&
+                      !providerDirty &&
+                      !scanDirty &&
+                      !assistantDirty &&
+                      editing === undefined
+                    }
+                    onRestored={(recoveryPoint) => {
+                      setCsrf(null);
+                      setData(null);
+                      setBackupDirty(false);
+                      setSettingsDirty(false);
+                      setProviderDirty(false);
+                      setTab('cabinet');
+                      setNotice(
+                        'Cabinet restored. Sign in again. Your previous cabinet is saved as {{name}} in Settings → Backup & recovery.',
+                        { name: recoveryPoint },
+                      );
+                      setAuth((a) => (a ? { ...a, authenticated: false } : a));
+                    }}
+                  />
+                  <ProviderSettings onDirty={setProviderDirty} />
+                </>
+              )}
+              {publicDemo && (
+                <section className="card section-card">
+                  <h2>{t('Demo limitations')}</h2>
+                  <p>
+                    {t(
+                      'Server backups and provider keys are available in the self-hosted app. This demo only simulates scans and interviews.',
+                    )}
+                  </p>
+                </section>
+              )}
               <section className="card section-card">
                 <h2>{t('Household account')}</h2>
                 <p className="muted">

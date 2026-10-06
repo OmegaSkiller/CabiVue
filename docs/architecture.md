@@ -77,3 +77,8 @@ New database changes use new numbered migrations. Do not edit an applied migrati
 The pinned dependencies and Node image make clean public builds reproducible.
 Tailwind scans only frontend sources, so documentation/tests cannot change the
 production stylesheet between local and container builds.
+
+The [public Pages demo](public-demo.md) uses a separate build mode and an in-memory
+browser API adapter. It reuses runtime contracts and domain rules but does not
+represent backend auth, database persistence, provider calls, or server recovery.
+The self-hosted build never enables this adapter.

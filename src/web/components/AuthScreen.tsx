@@ -1,3 +1,4 @@
+import { asset, publicDemo } from '../environment';
 import { LanguagePicker } from './LanguagePicker';
 import { t } from '../i18n';
 import { useState, type FormEvent } from 'react';
@@ -47,7 +48,7 @@ export function AuthScreen({
     <main className="auth-shell">
       <section className="auth-intro">
         <img
-          src={dark ? '/brand/cabivue-logo-reversed.svg' : '/brand/cabivue-logo.svg'}
+          src={asset(dark ? 'brand/cabivue-logo-reversed.svg' : 'brand/cabivue-logo.svg')}
           className="logo"
           alt="Cabivue"
         />
@@ -78,51 +79,62 @@ export function AuthScreen({
             {t('Synthetic demo only. No real medicines or provider calls.')}
           </div>
         )}
-        <form onSubmit={submit}>
-          <ErrorMessage error={error} />
-          {setup && (
-            <Field
-              label={t('One-time setup secret')}
-              hint={t('Read the secret file created during installation.')}
-            >
+        {publicDemo ? (
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              void api('/auth/login', send('POST', {})).then(onLogin);
+            }}
+          >
+            {t('Explore demo')}
+          </button>
+        ) : (
+          <form onSubmit={submit}>
+            <ErrorMessage error={error} />
+            {setup && (
+              <Field
+                label={t('One-time setup secret')}
+                hint={t('Read the secret file created during installation.')}
+              >
+                <input
+                  className="input"
+                  type="password"
+                  value={secret}
+                  onChange={(e) => setSecret(e.target.value)}
+                  required
+                  autoComplete="off"
+                />
+              </Field>
+            )}
+            <Field label={t('Username')}>
+              <input
+                className="input"
+                value={username}
+                minLength={3}
+                maxLength={60}
+                onChange={(e) => setUsername(e.target.value)}
+                autoComplete="username"
+                required
+              />
+            </Field>
+            <Field label={t('Password')} hint={setup ? t('At least 12 characters.') : undefined}>
               <input
                 className="input"
                 type="password"
-                value={secret}
-                onChange={(e) => setSecret(e.target.value)}
+                value={password}
+                minLength={12}
+                maxLength={256}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete={setup ? 'new-password' : 'current-password'}
                 required
-                autoComplete="off"
               />
             </Field>
-          )}
-          <Field label={t('Username')}>
-            <input
-              className="input"
-              value={username}
-              minLength={3}
-              maxLength={60}
-              onChange={(e) => setUsername(e.target.value)}
-              autoComplete="username"
-              required
-            />
-          </Field>
-          <Field label={t('Password')} hint={setup ? t('At least 12 characters.') : undefined}>
-            <input
-              className="input"
-              type="password"
-              value={password}
-              minLength={12}
-              maxLength={256}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete={setup ? 'new-password' : 'current-password'}
-              required
-            />
-          </Field>
-          <button className="btn btn-primary w-full" disabled={busy}>
-            {busy ? t('Working…') : setup ? t('Create household') : t('Sign in')}
-            <IconArrowRight size={20} />
-          </button>
-        </form>
+            <button className="btn btn-primary w-full" disabled={busy}>
+              {busy ? t('Working…') : setup ? t('Create household') : t('Sign in')}
+              <IconArrowRight size={20} />
+            </button>
+          </form>
+        )}
         <p className="small muted">{t('Your cabinet works without an AI key.')}</p>
         <button className="btn btn-ghost" onClick={onUrgent}>
           {t('Urgent help')}

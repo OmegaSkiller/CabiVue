@@ -474,5 +474,12 @@
   "unit.ml_many": "{{amount}}ml",
   "unit.g_many": "{{amount}}g",
   "unit.dose_many": "Doses de {{amount}}",
-  "unit.sachet_many": "Sachês {{amount}}"
+  "unit.sachet_many": "Sachês {{amount}}",
+  "Public demo": "Demonstração pública",
+  "Changes stay in this tab and reset on reload. Use synthetic data only.": "As alterações ficam nesta aba e são apagadas ao recarregar. Use apenas dados fictícios.",
+  "Reset demo": "Redefinir demonstração",
+  "Reset this demo and discard all changes?": "Redefinir esta demonstração e descartar todas as alterações?",
+  "Explore demo": "Explorar demonstração",
+  "Demo limitations": "Limitações da demonstração",
+  "Server backups and provider keys are available in the self-hosted app. This demo only simulates scans and interviews.": "Os backups do servidor e as chaves de API estão disponíveis no aplicativo auto-hospedado. Esta demonstração apenas simula digitalizações e entrevistas."
 }

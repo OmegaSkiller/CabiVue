@@ -1,3 +1,4 @@
+import { publicDemo } from '../environment';
 import { t } from '../i18n';
 import { useState, useRef, useEffect, type ChangeEvent } from 'react';
 import { IconCamera, IconReceipt, IconUpload, IconX, IconArrowRight } from '@tabler/icons-react';
@@ -146,7 +147,7 @@ export function ScanScreen({
     try {
       const { id } = await api<{ id: string }>('/imports', send('POST', { mode }));
       currentId.current = id;
-      const images = await Promise.all(photos.map((p) => bytesToBase64(p.file)));
+      const images = publicDemo ? [] : await Promise.all(photos.map((p) => bytesToBase64(p.file)));
       setStage(demo ? 'Preparing simulated review…' : 'OpenAI is reading the selected photos…');
       const result = await api<Draft>(`/imports/${id}/extract`, {
         ...send('POST', { consent: true, images }),

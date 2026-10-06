@@ -19,16 +19,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.20.0
+          cache: npm
+      - run: npm ci
+      - run: npm run build
       - run: docker build -t cabivue:ci .
-      - run: |
-          docker run -d --name cabivue-ci cabivue:ci
-          for attempt in $(seq 1 30); do
-            status=$(docker inspect --format '{{.State.Health.Status}}' cabivue-ci)
-            if [ "$status" = healthy ]; then exit 0; fi
-            sleep 2
-          done
-          docker logs cabivue-ci
-          exit 1
+      - run: npm run test:docker -- cabivue:ci
 
   browser:
     runs-on: ubuntu-latest
@@ -41,9 +39,13 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+      - run: npm run build
+      - run: npm run test:pwa
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: browser-report
-          path: playwright-report/
+          path: |
+            playwright-report/
+            playwright-report-pwa/
           retention-days: 7

@@ -1,0 +1,27 @@
+name: Bug report
+description: Report a reproducible application problem using synthetic data.
+body:
+  - type: markdown
+    attributes:
+      value: Do not include health records, real receipts, keys, passwords, or database exports. Report security vulnerabilities through private reporting.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Problem and expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce with synthetic data
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Commit, runtime, browser, and device
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized evidence
+      description: Use fictional records in screenshots. Remove secrets from logs.

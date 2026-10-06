@@ -9,6 +9,7 @@ dist/
 !/data/demo/
 secrets/
 playwright-report/
+playwright-report-pwa/
 test-results/
 .DS_Store
 coverage/

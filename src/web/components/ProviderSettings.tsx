@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState, useEffect, type FormEvent } from 'react';
 import { api, send } from '../api';
 import { Field, ErrorMessage } from './common';
@@ -49,20 +50,23 @@ export function ProviderSettings({ onDirty }: { onDirty: (dirty: boolean) => voi
   }
   return (
     <section className="card section-card">
-      <h2>Optional OpenAI connection</h2>
+      <h2>{t('Optional OpenAI connection')}</h2>
       <p className="muted">
-        Scans and optional history extraction run on OpenAI’s servers. Your provider may charge for
-        requests. Nothing is sent until you consent for that request.
+        {t(
+          'Scans and optional history extraction run on OpenAI’s servers. Your provider may charge for requests. Nothing is sent until you consent for that request.',
+        )}
       </p>
       <ErrorMessage error={error} />
       <p role="status" className={configured ? 'success-copy' : 'muted'}>
-        {configured ? 'Key connected for this session.' : 'No provider key connected.'}
+        {configured ? t('Key connected for this session.') : t('No provider key connected.')}
       </p>
       <form onSubmit={save}>
         <fieldset disabled={busy}>
           <Field
-            label="OpenAI API key"
-            hint="Held in server memory for this session. Cleared on sign out, expiry, removal, or restart."
+            label={t('OpenAI API key')}
+            hint={t(
+              'Held in server memory for this session. Cleared on sign out, expiry, removal, or restart.',
+            )}
           >
             <input
               className="input"
@@ -78,7 +82,7 @@ export function ProviderSettings({ onDirty }: { onDirty: (dirty: boolean) => voi
           </Field>
           <div className="provider-actions">
             <button className="btn btn-primary" disabled={busy}>
-              {configured ? 'Replace key' : 'Connect key'}
+              {configured ? t('Replace key') : t('Connect key')}
             </button>
             {configured && (
               <button
@@ -87,14 +91,14 @@ export function ProviderSettings({ onDirty }: { onDirty: (dirty: boolean) => voi
                 disabled={busy}
                 onClick={() => void remove()}
               >
-                Remove key
+                {t('Remove key')}
               </button>
             )}
           </div>
         </fieldset>
       </form>
       <p className="small muted">
-        Your cabinet works without a key. The connection does not make AI processing local.
+        {t('Your cabinet works without a key. The connection does not make AI processing local.')}
       </p>
     </section>
   );

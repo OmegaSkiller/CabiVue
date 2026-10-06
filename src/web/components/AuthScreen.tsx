@@ -1,3 +1,5 @@
+import { LanguagePicker } from './LanguagePicker';
+import { t } from '../i18n';
 import { useState, type FormEvent } from 'react';
 import { IconLock, IconArrowRight } from '@tabler/icons-react';
 import { api, send, setCsrf } from '../api';
@@ -50,41 +52,38 @@ export function AuthScreen({
           alt="Cabivue"
         />
         <div>
-          <p className="eyebrow">Your household, organized</p>
-          <h1>
-            Know what
-            <br />
-            you have.
-          </h1>
+          <p className="eyebrow">{t('Your household, organized')}</p>
+          <h1>{t('Know what you have.')}</h1>
           <p>
-            A clearer view of your medicine cabinet.
+            {t('A clearer view of your medicine cabinet.')}
             <br />
-            One pack, one date, one less thing to remember.
+            {t('One pack, one date, one less thing to remember.')}
           </p>
         </div>
-        <p className="muted">Self-hosted. Private to your household.</p>
+        <p className="muted">{t('Self-hosted. Private to your household.')}</p>
       </section>
       <section className="auth-form card">
+        <LanguagePicker />
         <span className="section-icon">
           <IconLock size={26} />
         </span>
-        <h2>{setup ? 'Set up your cabinet' : 'Welcome home'}</h2>
+        <h2>{setup ? t('Set up your cabinet') : t('Welcome home')}</h2>
         <p className="muted">
           {setup
-            ? 'Create the one household administrator account.'
-            : 'Sign in to see your medicines and upcoming dates.'}
+            ? t('Create the one household administrator account.')
+            : t('Sign in to see your medicines and upcoming dates.')}
         </p>
         {demo && (
           <div className="alert alert-info">
-            Synthetic demo only. No real medicines or provider calls.
+            {t('Synthetic demo only. No real medicines or provider calls.')}
           </div>
         )}
         <form onSubmit={submit}>
           <ErrorMessage error={error} />
           {setup && (
             <Field
-              label="One-time setup secret"
-              hint="Read the secret file created during installation."
+              label={t('One-time setup secret')}
+              hint={t('Read the secret file created during installation.')}
             >
               <input
                 className="input"
@@ -96,7 +95,7 @@ export function AuthScreen({
               />
             </Field>
           )}
-          <Field label="Username">
+          <Field label={t('Username')}>
             <input
               className="input"
               value={username}
@@ -107,7 +106,7 @@ export function AuthScreen({
               required
             />
           </Field>
-          <Field label="Password" hint={setup ? 'At least 12 characters.' : undefined}>
+          <Field label={t('Password')} hint={setup ? t('At least 12 characters.') : undefined}>
             <input
               className="input"
               type="password"
@@ -120,13 +119,13 @@ export function AuthScreen({
             />
           </Field>
           <button className="btn btn-primary w-full" disabled={busy}>
-            {busy ? 'Working…' : setup ? 'Create household' : 'Sign in'}
+            {busy ? t('Working…') : setup ? t('Create household') : t('Sign in')}
             <IconArrowRight size={20} />
           </button>
         </form>
-        <p className="small muted">Your cabinet works without an AI key.</p>
+        <p className="small muted">{t('Your cabinet works without an AI key.')}</p>
         <button className="btn btn-ghost" onClick={onUrgent}>
-          Urgent help
+          {t('Urgent help')}
         </button>
       </section>
     </main>

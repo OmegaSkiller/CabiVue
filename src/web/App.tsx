@@ -1,3 +1,6 @@
+import { useTranslation } from 'react-i18next';
+import { LanguagePicker } from './components/LanguagePicker';
+import { t, number, date, quantity } from './i18n';
 import { useEffect, useState, useCallback } from 'react';
 import {
   IconPlus,
@@ -44,6 +47,7 @@ const statusLabels = {
   'month-current': 'Expiry month is here',
 };
 export default function App() {
+  useTranslation();
   const [auth, setAuth] = useState<{
     configured: boolean;
     authenticated: boolean;
@@ -51,7 +55,12 @@ export default function App() {
   } | null>(null);
   const [data, setData] = useState<Inventory | null>(null);
   const [error, setError] = useState('');
-  const [notice, setNotice] = useState('');
+  const [notice, storeNotice] = useState<{
+    message: string;
+    values?: Record<string, string | number>;
+  } | null>(null);
+  const setNotice = (message: string, values?: Record<string, string | number>) =>
+    storeNotice({ message, values });
   const [tab, setTab] = useState('cabinet');
   const [scanDirty, setScanDirty] = useState(false);
   const [backupDirty, setBackupDirty] = useState(false);
@@ -65,7 +74,7 @@ export default function App() {
       setFilter(nextFilter);
       return true;
     }
-    if (dirty && !window.confirm('Discard your unsaved edits or active review?')) return false;
+    if (dirty && !window.confirm(t('Discard your unsaved edits or active review?'))) return false;
     setScanDirty(false);
     setBackupDirty(false);
     setSettingsDirty(false);
@@ -156,7 +165,7 @@ export default function App() {
     return () => window.removeEventListener('beforeunload', prevent);
   }, [dirty]);
   async function logout() {
-    if (dirty && !window.confirm('Discard your active edits and sign out?')) return;
+    if (dirty && !window.confirm(t('Discard your active edits and sign out?'))) return;
     try {
       await api('/auth/logout', send('POST', {}));
       setCsrf(null);
@@ -204,9 +213,11 @@ export default function App() {
       } else if (kind === 'archive') {
         if (
           !window.confirm(
-            pack.archived
-              ? 'Return this pack to your cabinet?'
-              : 'Archive this pack? You can find it in Archived.',
+            t(
+              pack.archived
+                ? 'Return this pack to your cabinet?'
+                : 'Archive this pack? You can find it in Archived.',
+            ),
           )
         )
           return;
@@ -215,7 +226,11 @@ export default function App() {
           send('POST', { version: pack.version, archived: !pack.archived }),
         );
       } else {
-        if (!window.confirm(`Permanently delete ${pack.product.name}? This cannot be undone.`))
+        if (
+          !window.confirm(
+            t('Permanently delete {{name}}? This cannot be undone.', { name: pack.product.name }),
+          )
+        )
           return;
         await api(
           `/packs/${pack.id}`,
@@ -235,7 +250,7 @@ export default function App() {
     }
   }
   const urgentOverlay = urgentOpen ? (
-    <Dialog title="Urgent help" onClose={() => setUrgentOpen(false)}>
+    <Dialog title={t('Urgent help')} onClose={() => setUrgentOpen(false)}>
       <UrgentHelp settings={data?.settings} dark={dark} onBack={() => setUrgentOpen(false)} />
     </Dialog>
   ) : null;
@@ -243,15 +258,16 @@ export default function App() {
     return (
       <main className="loading-page">
         <img className="logo" src="/brand/cabivue-logo.svg" alt="Cabivue" />
-        <p role="status">Opening your cabinet…</p>
+        <LanguagePicker />
+        <p role="status">{t('Opening your cabinet…')}</p>
         <button className="btn btn-outline" onClick={() => setUrgentOpen(true)}>
-          Urgent help
+          {t('Urgent help')}
         </button>
         {urgentOverlay}
         <ErrorMessage error={error} />
         {error && (
           <button className="btn btn-primary" onClick={() => void loadAuth()}>
-            Try again
+            {t('Try again')}
           </button>
         )}
       </main>
@@ -262,7 +278,7 @@ export default function App() {
         <ErrorMessage error={error} />
         {notice && (
           <p className="save-notice" role="status">
-            {notice}
+            {t(notice.message, notice.values)}
           </p>
         )}
         <AuthScreen
@@ -278,9 +294,9 @@ export default function App() {
   if (!data)
     return (
       <main className="loading-page">
-        <p role="status">Loading your medicines…</p>
+        <p role="status">{t('Loading your medicines…')}</p>
         <button className="btn btn-outline" onClick={() => setUrgentOpen(true)}>
-          Urgent help
+          {t('Urgent help')}
         </button>
         {urgentOverlay}
         <ErrorMessage error={error} />
@@ -325,7 +341,7 @@ export default function App() {
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main">
-        Skip to content
+        {t('Skip to content')}
       </a>
       <header className="topbar">
         <a href="/" className="brand-link">
@@ -335,21 +351,22 @@ export default function App() {
             alt="Cabivue"
           />
         </a>
-        <span className="tagline">Know what you have.</span>
+        <span className="tagline">{t('Know what you have.')}</span>
         <div className="header-actions">
+          <LanguagePicker />
           <button className="btn btn-ghost urgent-header" onClick={() => setUrgentOpen(true)}>
-            Urgent help
+            {t('Urgent help')}
           </button>
           <button
             className="btn btn-ghost btn-square"
-            aria-label={dark ? 'Use light theme' : 'Use dark theme'}
+            aria-label={dark ? t('Use light theme') : t('Use dark theme')}
             onClick={() => setDark(!dark)}
           >
             {dark ? <IconSun /> : <IconMoon />}
           </button>
           <button
             className="btn btn-ghost btn-square logout-button"
-            aria-label="Sign out"
+            aria-label={t('Sign out')}
             onClick={() => void logout()}
           >
             <IconLogout />
@@ -357,13 +374,13 @@ export default function App() {
         </div>
       </header>
       <div className="workspace">
-        <nav className="navigation" aria-label="Main navigation">
+        <nav className="navigation" aria-label={t('Main navigation')}>
           {[
-            { id: 'cabinet', label: 'My cabinet', icon: IconLayoutGrid },
-            { id: 'expiry', label: 'Expiry overview', icon: IconCalendarClock },
-            { id: 'scan', label: 'Scan', icon: IconCamera },
-            { id: 'assistant', label: 'Assistant', icon: IconNotes },
-            { id: 'settings', label: 'Settings', icon: IconSettings },
+            { id: 'cabinet', label: t('My cabinet'), icon: IconLayoutGrid },
+            { id: 'expiry', label: t('Expiry overview'), icon: IconCalendarClock },
+            { id: 'scan', label: t('Scan'), icon: IconCamera },
+            { id: 'assistant', label: t('Assistant'), icon: IconNotes },
+            { id: 'settings', label: t('Settings'), icon: IconSettings },
           ].map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -380,56 +397,57 @@ export default function App() {
           <div className="nav-note">
             <img src="/brand/cabivue-mark.svg" alt="" width={30} />
             <p>
-              A little order.
-              <br />A clearer day.
+              {t('A little order.')} <br />
+              {t('A clearer day.')}
             </p>
           </div>
         </nav>
         <main id="main" className="main-content">
           {auth.demo && (
             <div className="alert alert-info demo-banner">
-              Synthetic demo. Simulated provider results; no real medicine information.
+              {t('Synthetic demo. Simulated provider results; no real medicine information.')}
             </div>
           )}
           {!online && (
             <div className="alert alert-warning" role="alert">
               <WarningIcon />
               <span>
-                You’re offline. Reconnect to view current records and save changes. This cabinet is
-                not cached.
+                {t(
+                  'You’re offline. Reconnect to view current records and save changes. This cabinet is not cached.',
+                )}
               </span>
             </div>
           )}
           <ErrorMessage error={error} />
           {notice && (
             <div className="save-notice" role="status">
-              {notice}
+              {t(notice.message, notice.values)}
             </div>
           )}
           <div className="page-heading">
             <div>
-              <p className="eyebrow">Your home medicine cabinet</p>
+              <p className="eyebrow">{t('Your home medicine cabinet')}</p>
               <h1>
                 {tab === 'assistant'
-                  ? 'Your symptom history'
+                  ? t('Your symptom history')
                   : tab === 'scan'
-                    ? 'Scan & review'
+                    ? t('Scan & review')
                     : tab === 'settings'
-                      ? 'Household settings'
+                      ? t('Household settings')
                       : tab === 'expiry'
-                        ? 'Dates that need attention'
-                        : 'My cabinet'}
+                        ? t('Dates that need attention')
+                        : t('My cabinet')}
               </h1>
               <p className="muted">
                 {tab === 'assistant'
-                  ? 'Prepare a clearer conversation with a professional.'
+                  ? t('Prepare a clearer conversation with a professional.')
                   : tab === 'scan'
-                    ? 'Read the label. Keep the final say.'
+                    ? t('Read the label. Keep the final say.')
                     : tab === 'settings'
-                      ? 'A cabinet that fits your home.'
+                      ? t('A cabinet that fits your home.')
                       : tab === 'expiry'
-                        ? 'A recorded date is a reminder, never a recommendation.'
-                        : 'A clear place for every pack.'}
+                        ? t('A recorded date is a reminder, never a recommendation.')
+                        : t('A clear place for every pack.')}
               </p>
             </div>
             {['cabinet', 'expiry'].includes(tab) && (
@@ -439,7 +457,7 @@ export default function App() {
                 disabled={!online}
               >
                 <IconPlus size={22} />
-                Add medicine
+                {t('Add medicine')}
               </button>
             )}
           </div>
@@ -493,19 +511,20 @@ export default function App() {
                   setProviderDirty(false);
                   setTab('cabinet');
                   setNotice(
-                    `Cabinet restored. Sign in again. Your previous cabinet is saved as ${recoveryPoint} in Settings → Backup & recovery.`,
+                    'Cabinet restored. Sign in again. Your previous cabinet is saved as {{name}} in Settings → Backup & recovery.',
+                    { name: recoveryPoint },
                   );
                   setAuth((a) => (a ? { ...a, authenticated: false } : a));
                 }}
               />
               <ProviderSettings onDirty={setProviderDirty} />
               <section className="card section-card">
-                <h2>Household account</h2>
+                <h2>{t('Household account')}</h2>
                 <p className="muted">
-                  Signing out clears the provider key and transient interview.
+                  {t('Signing out clears the provider key and transient interview.')}
                 </p>
                 <button className="btn btn-outline" onClick={() => void logout()}>
-                  Sign out
+                  {t('Sign out')}
                 </button>
               </section>
             </SettingsScreen>
@@ -514,16 +533,16 @@ export default function App() {
               <div className="cabinet-main">
                 <div className="cabinet-summary">
                   <button onClick={() => navigate('cabinet')}>
-                    <span className="summary-number mono">{active.length}</span>
-                    <span>Packs in cabinet</span>
+                    <span className="summary-number mono">{number(active.length)}</span>
+                    <span>{t('Packs in cabinet')}</span>
                   </button>
                   <button onClick={() => navigate('expiry', 'soon')}>
-                    <span className="summary-number mono">{soon.length}</span>
-                    <span>Expiring soon</span>
+                    <span className="summary-number mono">{number(soon.length)}</span>
+                    <span>{t('Expiring soon')}</span>
                   </button>
                   <button onClick={() => navigate('expiry', 'expired')}>
-                    <span className="summary-number mono">{expired.length}</span>
-                    <span>Expired</span>
+                    <span className="summary-number mono">{number(expired.length)}</span>
+                    <span>{t('Expired')}</span>
                   </button>
                 </div>
                 {missing.length > 0 && (
@@ -531,16 +550,19 @@ export default function App() {
                     <WarningIcon />
                     <div>
                       <strong>
-                        {missing.length}{' '}
-                        {missing.length === 1 ? 'medicine needs' : 'medicines need'} an expiry date
+                        {t('missingExpiryTitle', {
+                          count: missing.length,
+                          amount: number(missing.length),
+                        })}
                       </strong>
                       <p>
-                        You have {missing.length} {missing.length === 1 ? 'medicine' : 'medicines'}{' '}
-                        without an expiry date entered. Review them and add expiry dates so Cabivue
-                        can remind you when they expire.
+                        {t('missingExpiryBody', {
+                          count: missing.length,
+                          amount: number(missing.length),
+                        })}
                       </p>
                       <button className="review-link" onClick={showMissing}>
-                        Review missing dates
+                        {t('Review missing dates')}
                         <IconArrowRight size={18} />
                       </button>
                     </div>
@@ -549,45 +571,47 @@ export default function App() {
                 {expired.length > 0 && (
                   <p className="expiry-reminder">
                     <WarningIcon />
-                    {expired.length} {expired.length === 1 ? 'pack has' : 'packs have'} a recorded
-                    expiry in the past. Review before use and ask a pharmacist about disposal.
+                    {t('expiredReminder', {
+                      count: expired.length,
+                      amount: number(expired.length),
+                    })}
                   </p>
                 )}
                 <div className="inventory-toolbar">
                   <label className="search-field">
                     <IconSearch size={20} />
-                    <span className="sr-only">Search medicines</span>
+                    <span className="sr-only">{t('Search medicines')}</span>
                     <input
                       className="input"
-                      placeholder="Search your cabinet"
+                      placeholder={t('Search your cabinet')}
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
                     />
                   </label>
                   <label>
-                    <span className="sr-only">Filter medicines</span>
+                    <span className="sr-only">{t('Filter medicines')}</span>
                     <select
                       className="select"
                       value={filter}
                       onChange={(e) => setFilter(e.target.value)}
                     >
-                      <option value="all">All medicines</option>
-                      <option value="stock">In stock</option>
-                      <option value="unknown">Missing expiry date</option>
-                      <option value="soon">Expiring soon</option>
-                      <option value="expired">Expired</option>
-                      <option value="exhausted">Exhausted</option>
-                      <option value="archived">Archived</option>
+                      <option value="all">{t('All medicines')}</option>
+                      <option value="stock">{t('In stock')}</option>
+                      <option value="unknown">{t('Missing expiry date')}</option>
+                      <option value="soon">{t('Expiring soon')}</option>
+                      <option value="expired">{t('Expired')}</option>
+                      <option value="exhausted">{t('Exhausted')}</option>
+                      <option value="archived">{t('Archived')}</option>
                     </select>
                   </label>
                   <label>
-                    <span className="sr-only">Filter storage location</span>
+                    <span className="sr-only">{t('Filter storage location')}</span>
                     <select
                       className="select"
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
                     >
-                      <option value="">All locations</option>
+                      <option value="">{t('All locations')}</option>
                       {data.locations.map((l) => (
                         <option value={l.id} key={l.id}>
                           {l.name}
@@ -597,23 +621,23 @@ export default function App() {
                   </label>
                 </div>
                 <div className="results-heading">
-                  <span>
-                    {list.length} {list.length === 1 ? 'pack' : 'packs'}
-                  </span>
+                  <span>{quantity(list.length, 'pack')}</span>
                   {filter !== 'all' && (
                     <button className="btn btn-ghost btn-sm" onClick={() => setFilter('all')}>
-                      Clear filter
+                      {t('Clear filter')}
                     </button>
                   )}
                 </div>
                 {!list.length ? (
                   <div className="empty-state">
                     <IconBox size={44} />
-                    <h2>{active.length ? 'No packs match this view' : 'Your cabinet is empty'}</h2>
+                    <h2>
+                      {active.length ? t('No packs match this view') : t('Your cabinet is empty')}
+                    </h2>
                     <p>
                       {active.length
-                        ? 'Try another search or filter.'
-                        : 'Add a medicine or scan a label to get started.'}
+                        ? t('Try another search or filter.')
+                        : t('Add a medicine or scan a label to get started.')}
                     </p>
                     <button
                       className="btn btn-primary"
@@ -623,7 +647,7 @@ export default function App() {
                           : setEditing(null)
                       }
                     >
-                      {active.length ? 'Show all medicines' : 'Add medicine'}
+                      {active.length ? t('Show all medicines') : t('Add medicine')}
                     </button>
                   </div>
                 ) : (
@@ -637,34 +661,47 @@ export default function App() {
                         >
                           <div className="pack-topline">
                             <span className="pack-form">
-                              {pack.product.form || 'Form not recorded'}
+                              {pack.product.form || t('Form not recorded')}
                             </span>
                             <span className="mono small">{pack.product.country}</span>
                           </div>
                           <button className="pack-title" onClick={() => setEditing(pack)}>
-                            <h2>{pack.product.name}</h2>
+                            <h2>
+                              <bdi>{pack.product.name}</bdi>
+                            </h2>
                           </button>
                           <p className="pack-ingredient muted">
-                            {pack.product.ingredientText || 'Ingredients not recorded'}
+                            {pack.product.ingredientText || t('Ingredients not recorded')}
                           </p>
                           <div className={`pack-expiry expiry-${state}`}>
                             {state !== 'recorded' && <WarningIcon />}
                             <span>
-                              {statusLabels[state]}
+                              {t(statusLabels[state])}
                               {pack.expiryValue && (
-                                <span className="mono"> · {pack.expiryValue}</span>
+                                <span className="mono">
+                                  {' '}
+                                  ·{' '}
+                                  <time dateTime={pack.expiryValue} title={pack.expiryValue}>
+                                    {date(
+                                      pack.expiryValue,
+                                      pack.expiryPrecision === 'month' ? 'month' : 'day',
+                                    )}
+                                  </time>
+                                </span>
                               )}
                             </span>
                           </div>
                           <p className="pack-location">
                             {data.locations.find((l) => l.id === pack.locationId)?.name ||
-                              'No storage location'}
+                              t('No storage location')}
                           </p>
                           <div className="pack-footer">
                             <div className="quantity-controls">
                               <button
                                 className="btn btn-ghost btn-square"
-                                aria-label={`Reduce quantity of ${pack.product.name}`}
+                                aria-label={t('Reduce quantity of {{name}}', {
+                                  name: pack.product.name,
+                                })}
                                 disabled={!online || pack.quantity <= 0}
                                 onClick={() =>
                                   void mutate(pack, 'quantity', Math.max(0, pack.quantity - 1))
@@ -672,16 +709,12 @@ export default function App() {
                               >
                                 <IconMinus size={18} />
                               </button>
-                              <span className="mono">
-                                {pack.quantity}{' '}
-                                <span className="small">
-                                  {pack.unit}
-                                  {pack.quantity !== 1 ? 's' : ''}
-                                </span>
-                              </span>
+                              <span className="mono">{quantity(pack.quantity, pack.unit)}</span>
                               <button
                                 className="btn btn-ghost btn-square"
-                                aria-label={`Increase quantity of ${pack.product.name}`}
+                                aria-label={t('Increase quantity of {{name}}', {
+                                  name: pack.product.name,
+                                })}
                                 disabled={!online}
                                 onClick={() => void mutate(pack, 'quantity', pack.quantity + 1)}
                               >
@@ -691,7 +724,10 @@ export default function App() {
                             <div className="pack-actions">
                               <button
                                 className="btn btn-ghost btn-square"
-                                aria-label={`${pack.archived ? 'Unarchive' : 'Archive'} ${pack.product.name}`}
+                                aria-label={t(
+                                  pack.archived ? 'Unarchive {{name}}' : 'Archive {{name}}',
+                                  { name: pack.product.name },
+                                )}
                                 disabled={!online}
                                 onClick={() => void mutate(pack, 'archive')}
                               >
@@ -699,7 +735,7 @@ export default function App() {
                               </button>
                               <button
                                 className="btn btn-ghost btn-square"
-                                aria-label={`Delete ${pack.product.name}`}
+                                aria-label={t('Delete {{name}}', { name: pack.product.name })}
                                 disabled={!online}
                                 onClick={() => void mutate(pack, 'delete')}
                               >
@@ -708,13 +744,13 @@ export default function App() {
                             </div>
                           </div>
                           {pack.quantity === 0 && (
-                            <span className="badge badge-outline">Exhausted</span>
+                            <span className="badge badge-outline">{t('Exhausted')}</span>
                           )}
                           <button
                             className="card-edit btn btn-ghost"
                             onClick={() => setEditing(pack)}
                           >
-                            {state === 'unknown' ? 'Add an expiry date' : 'View & edit pack'}
+                            {state === 'unknown' ? t('Add an expiry date') : t('View & edit pack')}
                             <IconArrowRight size={18} />
                           </button>
                         </article>
@@ -738,7 +774,7 @@ export default function App() {
           )}
           <PwaControls blocked={dirty} />
           <footer className="app-footer">
-            Inventory information does not establish whether a medicine is suitable for you.
+            {t('Inventory information does not establish whether a medicine is suitable for you.')}
           </footer>
         </main>
       </div>

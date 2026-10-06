@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState, useEffect, type FormEvent, type ReactNode } from 'react';
 import type { Settings, Location } from '../../contracts/inventory';
 import { api, send } from '../api';
@@ -56,30 +57,32 @@ export function SettingsScreen({
   return (
     <div className="settings-grid">
       <section className="card section-card">
-        <h2>Your household</h2>
+        <h2>{t('Your household')}</h2>
         <p className="muted">
-          Dates follow your household timezone. Urgent-help contacts are configured here.
+          {t('Dates follow your household timezone. Urgent-help contacts are configured here.')}
         </p>
         <ErrorMessage error={error} />
         {message && (
           <p role="status" className="success-copy">
-            {message}
+            {t(message)}
           </p>
         )}
         <form onSubmit={save}>
           <fieldset disabled={busy}>
-            <Field label="Timezone">
+            <Field label={t('Timezone')}>
               <input
                 className="input"
                 value={values.timezone}
                 onChange={(e) => setValues({ ...values, timezone: e.target.value })}
                 required
-                placeholder="Europe/Sofia"
+                placeholder={t('Europe/Sofia')}
               />
             </Field>
             <Field
-              label="Emergency contact"
-              hint="Enter a confirmed local number or instruction. Cabivue does not guess emergency numbers."
+              label={t('Emergency contact')}
+              hint={t(
+                'Enter a confirmed local number or instruction. Cabivue does not guess emergency numbers.',
+              )}
             >
               <input
                 className="input"
@@ -87,44 +90,44 @@ export function SettingsScreen({
                 onChange={(e) => setValues({ ...values, emergencyContact: e.target.value })}
               />
             </Field>
-            <Field label="Emergency contact location">
+            <Field label={t('Emergency contact location')}>
               <input
                 className="input"
                 value={values.emergencyLocation}
                 onChange={(e) => setValues({ ...values, emergencyLocation: e.target.value })}
-                placeholder="Country or region"
+                placeholder={t('Country or region')}
               />
             </Field>
             <button className="btn btn-primary" disabled={busy}>
-              {busy ? 'Saving…' : 'Save household settings'}
+              {busy ? t('Saving…') : t('Save household settings')}
             </button>
           </fieldset>
         </form>
       </section>
       <section className="card section-card">
-        <h2>Storage locations</h2>
-        <p className="muted">Make it easy to find the right pack.</p>
+        <h2>{t('Storage locations')}</h2>
+        <p className="muted">{t('Make it easy to find the right pack.')}</p>
         <div className="location-list">
           {locations.map((l) => (
             <span className="badge badge-outline" key={l.id}>
               {l.name}
             </span>
           ))}
-          {!locations.length && <p className="small muted">No locations yet.</p>}
+          {!locations.length && <p className="small muted">{t('No locations yet.')}</p>}
         </div>
         <form onSubmit={addLocation}>
           <fieldset disabled={busy}>
-            <Field label="New location">
+            <Field label={t('New location')}>
               <input
                 className="input"
                 value={location}
                 maxLength={300}
                 onChange={(e) => setLocation(e.target.value)}
                 required
-                placeholder="e.g. Hallway cupboard"
+                placeholder={t('e.g. Hallway cupboard')}
               />
             </Field>
-            <button className="btn btn-outline">Add location</button>
+            <button className="btn btn-outline">{t('Add location')}</button>
           </fieldset>
         </form>
       </section>

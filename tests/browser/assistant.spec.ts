@@ -12,6 +12,9 @@ test('urgent help is available before sign in; interview stays transient and edi
   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.getByLabel('Your answer').fill('Synthetic unsaved history');
+  await page.locator('.language-picker select').selectOption('bg');
+  await expect(page.locator('.interview-form textarea')).toHaveValue('Synthetic unsaved history');
+  await page.locator('.language-picker select').selectOption('en');
   page.once('dialog', (dialog) => dialog.dismiss());
   await page.getByRole('button', { name: /^\d+ Expiring soon$/ }).click();
   await expect(page.getByLabel('Your answer')).toHaveValue('Synthetic unsaved history');

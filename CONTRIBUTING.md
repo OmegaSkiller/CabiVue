@@ -20,3 +20,5 @@ an accountable review process. Do not add copied leaflets under the code license
 This app must not select treatments or generate dosing. Changes to intake or
 medical wording require appropriate clinical and regulatory review before public
 medical use. Keep the fixed urgency screen independent of AI.
+
+For interface translations, follow the [localization guide](docs/localization.md).

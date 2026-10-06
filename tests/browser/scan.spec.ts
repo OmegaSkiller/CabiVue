@@ -22,6 +22,10 @@ test('mobile medicine scan stays a draft; receipt needs explicit line and quanti
   expect((await (await page.request.get('/api/inventory')).json()).packs).toHaveLength(
     before.length,
   );
+  await page.locator('.language-picker select').selectOption('bg');
+  await expect(page.locator('.review-line input[type=date]').first()).toHaveValue('');
+  await expect(page.locator('.review-line')).toContainText('Sample package · simulated');
+  await page.locator('.language-picker select').selectOption('en');
   await expect(page.getByLabel('Expiry date', { exact: true })).toHaveValue('');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);

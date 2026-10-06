@@ -1,3 +1,4 @@
+import { t, date, number } from '../i18n';
 import { useState, type FormEvent } from 'react';
 import { api, send } from '../api';
 import type { Pack, PackFields, Location, Product } from '../../contracts/inventory';
@@ -33,7 +34,7 @@ export function PackFieldsForm({
   return (
     <>
       <div className="form-grid">
-        <Field label="Quantity remaining">
+        <Field label={t('Quantity remaining')}>
           <input
             className="input mono"
             type="number"
@@ -45,25 +46,27 @@ export function PackFieldsForm({
             required
           />
         </Field>
-        <Field label="Quantity unit">
+        <Field label={t('Quantity unit')}>
           <select
             className="select"
             value={value.unit}
             onChange={(e) => change('unit', e.target.value)}
           >
             {['pack', 'tablet', 'capsule', 'ml', 'g', 'dose', 'sachet'].map((v) => (
-              <option key={v}>{v}</option>
+              <option key={v} value={v}>
+                {t(`unitName.${v}`)}
+              </option>
             ))}
           </select>
         </Field>
       </div>
-      <Field label="Storage location">
+      <Field label={t('Storage location')}>
         <select
           className="select"
           value={value.locationId || ''}
           onChange={(e) => change('locationId', e.target.value || null)}
         >
-          <option value="">Not specified</option>
+          <option value="">{t('Not specified')}</option>
           {locations.map((l) => (
             <option key={l.id} value={l.id}>
               {l.name}
@@ -75,14 +78,17 @@ export function PackFieldsForm({
         <Field
           label={
             <span className={!value.expiryValue ? 'warning-label' : ''}>
-              {!value.expiryValue && <WarningIcon />}Expiry date
-              {!value.expiryValue && <span className="small"> · unknown</span>}
+              {!value.expiryValue && <WarningIcon />}
+              {t('Expiry date')}
+              {!value.expiryValue && <span className="small">{t('· unknown')}</span>}
             </span>
           }
-          hint="Leave blank if the date is missing or unclear. A receipt date is not an expiry date."
+          hint={t(
+            'Leave blank if the date is missing or unclear. A receipt date is not an expiry date.',
+          )}
         >
           <input
-            aria-label="Expiry date"
+            aria-label={t('Expiry date')}
             className="input mono"
             type={value.expiryPrecision === 'month' ? 'month' : 'date'}
             value={value.expiryValue || ''}
@@ -112,26 +118,26 @@ export function PackFieldsForm({
               })
             }
           />
-          The label shows only month and year
+          {t('The label shows only month and year')}
         </label>
         {!value.expiryValue && (
           <p className="warning-copy">
             <WarningIcon />
-            Add an expiry date to receive expiry reminders. Usability is unknown.
+            {t('Add an expiry date to receive expiry reminders. Usability is unknown.')}
           </p>
         )}
       </div>
       <div className="form-grid">
-        <Field label="Printed expiry text">
+        <Field label={t('Printed expiry text')}>
           <input
             className="input"
             maxLength={300}
             value={value.expiryText || ''}
             onChange={(e) => change('expiryText', e.target.value || null)}
-            placeholder="e.g. EXP 10/2027"
+            placeholder={t('e.g. EXP 10/2027')}
           />
         </Field>
-        <Field label="Batch / lot">
+        <Field label={t('Batch / lot')}>
           <input
             className="input mono"
             maxLength={300}
@@ -140,7 +146,7 @@ export function PackFieldsForm({
           />
         </Field>
       </div>
-      <Field label="Opened on">
+      <Field label={t('Opened on')}>
         <input
           className="input mono"
           type="date"
@@ -155,9 +161,9 @@ export function PackFieldsForm({
           checked={value.storageUncertain}
           onChange={(e) => change('storageUncertain', e.target.checked)}
         />
-        Storage conditions are uncertain
+        {t('Storage conditions are uncertain')}
       </label>
-      <Field label="Notes">
+      <Field label={t('Notes')}>
         <textarea
           className="textarea"
           maxLength={2000}
@@ -208,7 +214,7 @@ export function PackEditor({
   const dirty =
     JSON.stringify(fields) !== JSON.stringify(seed) || product.name !== '' || productId !== '';
   const close = () => {
-    if (!busy && (!dirty || window.confirm('Discard your unsaved changes?'))) onClose();
+    if (!busy && (!dirty || window.confirm(t('Discard your unsaved changes?')))) onClose();
   };
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -236,7 +242,7 @@ export function PackEditor({
     }
   }
   return (
-    <Dialog title={identity ? identity.name : 'Add medicine'} onClose={close}>
+    <Dialog title={identity ? identity.name : t('Add medicine')} onClose={close}>
       <form onSubmit={submit}>
         <fieldset disabled={busy}>
           <ErrorMessage error={error} />
@@ -244,42 +250,45 @@ export function PackEditor({
             <div className="pack-identity">
               <p>
                 {[identity?.form, identity?.ingredientText].filter(Boolean).join(' · ') ||
-                  'Formulation not recorded'}
+                  t('Formulation not recorded')}
               </p>
               <span className="badge badge-outline">
-                {identity?.identityConfirmed ? 'Identity checked by you' : 'Identity unconfirmed'}
+                {identity?.identityConfirmed
+                  ? t('Identity checked by you')
+                  : t('Identity unconfirmed')}
               </span>
               <p className="small muted">
                 {reviewedSources({ ...pack, product: identity || pack.product }).length > 0
-                  ? 'Reviewed source information available.'
-                  : 'No reviewed leaflet information.'}
+                  ? t('Reviewed source information available.')
+                  : t('No reviewed leaflet information.')}
               </p>
               <button
                 type="button"
                 className="btn btn-outline"
                 onClick={() => setEditIdentity(true)}
               >
-                Edit shared product
+                {t('Edit shared product')}
               </button>
               {pack.purchase && (
                 <p className="small">
-                  Purchased {pack.purchase.date || 'date unknown'} ·{' '}
-                  {pack.purchase.pharmacy || 'pharmacy unknown'}
+                  {t('Purchased')}{' '}
+                  {pack.purchase.date ? date(pack.purchase.date) : t('date unknown')} ·{' '}
+                  {pack.purchase.pharmacy || t('pharmacy unknown')}
                   {pack.purchase.lineTotal != null
-                    ? ` · ${pack.purchase.lineTotal} ${pack.purchase.currency || ''}`
+                    ? ` · ${number(pack.purchase.lineTotal)} ${pack.purchase.currency || ''}`
                     : ''}
                 </p>
               )}
             </div>
           ) : (
             <>
-              <Field label="Product">
+              <Field label={t('Product')}>
                 <select
                   className="select"
                   value={productId}
                   onChange={(e) => setProductId(e.target.value)}
                 >
-                  <option value="">Enter a new product</option>
+                  <option value="">{t('Enter a new product')}</option>
                   {products.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.name}
@@ -293,10 +302,10 @@ export function PackEditor({
           <PackFieldsForm value={fields} onChange={setFields} locations={locations} />
           <div className="dialog-actions">
             <button type="button" className="btn btn-ghost" onClick={close}>
-              Cancel
+              {t('Cancel')}
             </button>
             <button className="btn btn-primary" disabled={busy}>
-              {busy ? 'Saving…' : pack ? 'Save changes' : 'Add to cabinet'}
+              {busy ? t('Saving…') : pack ? t('Save changes') : t('Add to cabinet')}
             </button>
           </div>
         </fieldset>

@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState, useRef, useEffect, type ChangeEvent } from 'react';
 import { IconCamera, IconReceipt, IconUpload, IconX, IconArrowRight } from '@tabler/icons-react';
 import { api, send } from '../api';
@@ -229,17 +230,21 @@ export function ScanScreen({
   return (
     <section className="scan-screen">
       <div className="scan-heading">
-        <h2>{draft ? 'Review your scan' : 'A photo. A little less typing.'}</h2>
+        <h2>{draft ? t('Review your scan') : t('A photo. A little less typing.')}</h2>
         <p className="muted">
           {draft
-            ? 'Check every selected value against the photos. Nothing is in your cabinet until you save.'
-            : 'Photograph the front label and the expiry area, or select medicine lines from a pharmacy receipt.'}
+            ? t(
+                'Check every selected value against the photos. Nothing is in your cabinet until you save.',
+              )
+            : t(
+                'Photograph the front label and the expiry area, or select medicine lines from a pharmacy receipt.',
+              )}
         </p>
       </div>
       <ErrorMessage error={error} />
       {!draft && (
         <>
-          <div className="scan-modes" role="group" aria-label="Scan mode">
+          <div className="scan-modes" role="group" aria-label={t('Scan mode')}>
             <button
               className={`btn ${mode === 'medicine' ? 'btn-primary' : 'btn-outline'}`}
               disabled={busy || photos.length > 0}
@@ -247,7 +252,7 @@ export function ScanScreen({
               onClick={() => setMode('medicine')}
             >
               <IconCamera size={21} />
-              Medicine photo
+              {t('Medicine photo')}
             </button>
             <button
               className={`btn ${mode === 'receipt' ? 'btn-primary' : 'btn-outline'}`}
@@ -256,27 +261,27 @@ export function ScanScreen({
               onClick={() => setMode('receipt')}
             >
               <IconReceipt size={21} />
-              Receipt scan
+              {t('Receipt scan')}
             </button>
           </div>
           <div className="upload-zone">
             <IconCamera size={40} />
             <h3>
               {mode === 'medicine'
-                ? 'Capture the label and expiry'
-                : 'Capture the receipt, in order'}
+                ? t('Capture the label and expiry')
+                : t('Capture the receipt, in order')}
             </h3>
             <p className="muted">
-              Use clear light. Keep text in focus and avoid glare.
+              {t('Use clear light. Keep text in focus and avoid glare.')}
               <br />
-              JPEG, PNG, WebP · up to 3 photos · 6 MB each / 12 MB total
+              {t('JPEG, PNG, WebP · up to 3 photos · 6 MB each / 12 MB total')}
             </p>
             <div className="upload-actions">
               <label className="btn btn-primary">
                 <IconCamera size={20} />
-                Take photo
+                {t('Take photo')}
                 <input
-                  aria-label="Take photo"
+                  aria-label={t('Take photo')}
                   className="sr-only"
                   type="file"
                   accept="image/jpeg,image/png,image/webp"
@@ -287,9 +292,9 @@ export function ScanScreen({
               </label>
               <label className="btn btn-outline">
                 <IconUpload size={20} />
-                Upload photos
+                {t('Upload photos')}
                 <input
-                  aria-label="Upload photos"
+                  aria-label={t('Upload photos')}
                   className="sr-only"
                   type="file"
                   accept="image/jpeg,image/png,image/webp"
@@ -306,14 +311,23 @@ export function ScanScreen({
         <div className="photo-strip">
           {photos.map((p, i) => (
             <figure key={p.url}>
-              <img src={p.url} alt={`Selected ${mode} photo ${i + 1}`} />
+              <img
+                src={p.url}
+                alt={t(
+                  mode === 'medicine'
+                    ? 'Selected medicine photo {{index}}'
+                    : 'Selected receipt photo {{index}}',
+                  { index: i + 1 },
+                )}
+              />
               <figcaption>
-                Photo {i + 1}
+                {t('Photo')}
+                {i + 1}
                 {!draft && (
                   <button
                     className="btn btn-ghost btn-square"
                     disabled={busy}
-                    aria-label={`Remove photo ${i + 1}`}
+                    aria-label={t('Remove photo {{index}}', { index: i + 1 })}
                     onClick={() => removePhoto(i)}
                   >
                     <IconX size={18} />
@@ -326,11 +340,15 @@ export function ScanScreen({
       )}
       {!draft && photos.length > 0 && (
         <section className="card consent-card">
-          <h3>{demo ? 'Simulated processing' : 'Review what leaves your instance'}</h3>
+          <h3>{demo ? t('Simulated processing') : t('Review what leaves your instance')}</h3>
           <p>
             {demo
-              ? 'Demo output is simulated and does not read your photos. No provider request will be made.'
-              : 'Only the selected photos are sent to OpenAI after server validation and metadata removal. Visible label and receipt text leave your instance. Crop payment details and unrelated information before uploading. OpenAI’s data policies and charges apply.'}
+              ? t(
+                  'Demo output is simulated and does not read your photos. No provider request will be made.',
+                )
+              : t(
+                  'Only the selected photos are sent to OpenAI after server validation and metadata removal. Visible label and receipt text leave your instance. Crop payment details and unrelated information before uploading. OpenAI’s data policies and charges apply.',
+                )}
           </p>
           <label className="check-label">
             <input
@@ -341,8 +359,8 @@ export function ScanScreen({
               disabled={busy}
             />
             {demo
-              ? 'I understand this scan uses simulated results.'
-              : 'I agree to send these selected photos to OpenAI for this scan.'}
+              ? t('I understand this scan uses simulated results.')
+              : t('I agree to send these selected photos to OpenAI for this scan.')}
           </label>
           <div className="scan-controls">
             <button
@@ -350,19 +368,19 @@ export function ScanScreen({
               disabled={!consent || busy}
               onClick={() => void extract()}
             >
-              {busy ? 'Processing…' : 'Extract a review draft'}
+              {busy ? t('Processing…') : t('Extract a review draft')}
               <IconArrowRight size={19} />
             </button>
             {busy && (
               <button className="btn btn-outline" onClick={() => void cancel()}>
-                Cancel processing
+                {t('Cancel processing')}
               </button>
             )}
           </div>
           {stage && (
             <p role="status" className="processing-status">
               <span className="loading loading-spinner loading-sm" />
-              {stage}
+              {t(stage)}
             </p>
           )}
         </section>
@@ -370,17 +388,18 @@ export function ScanScreen({
       {draft && (
         <>
           <div className="alert alert-info">
-            {draft.simulated ? 'SIMULATED extraction. Not OCR accuracy evidence. ' : ''}Review
-            expires after 30 minutes. Unknown dates may be deliberately saved.
+            {draft.simulated ? t('SIMULATED extraction. Not OCR accuracy evidence. ') : ''}
+            {t('Review expires after 30 minutes. Unknown dates may be deliberately saved.')}
           </div>
           {draft.duplicate && (
             <div className="alert missing-alert">
               <WarningIcon />
               <div>
-                <strong>Possible duplicate receipt</strong>
+                <strong>{t('Possible duplicate receipt')}</strong>
                 <p>
-                  This receipt resembles a previous import. Genuine repeat purchases can still be
-                  saved.
+                  {t(
+                    'This receipt resembles a previous import. Genuine repeat purchases can still be saved.',
+                  )}
                 </p>
                 <label className="check-label">
                   <input
@@ -389,7 +408,7 @@ export function ScanScreen({
                     checked={duplicate}
                     onChange={(e) => setDuplicate(e.target.checked)}
                   />
-                  This is a separate purchase; save it again.
+                  {t('This is a separate purchase; save it again.')}
                 </label>
               </div>
             </div>
@@ -412,20 +431,24 @@ export function ScanScreen({
                       checked={line.selected}
                       onChange={(e) => updateLine(i, { selected: e.target.checked })}
                     />
-                    <strong>{c.name.value || c.name.raw || `Unclear line ${i + 1}`}</strong>
-                    <span className="badge badge-outline">{c.kind}</span>
+                    <strong>
+                      {c.name.value || c.name.raw || t('Unclear line {{index}}', { index: i + 1 })}
+                    </strong>
+                    <span className="badge badge-outline">{t(`kind.${c.kind}`)}</span>
                   </label>
                   <details className="evidence-details">
-                    <summary>Visible evidence & missing fields</summary>
+                    <summary>{t('Visible evidence & missing fields')}</summary>
                     {Object.entries(c)
                       .filter(([_, v]) => v && typeof v === 'object' && 'status' in v)
                       .map(([name, v]) => {
                         const f = v as Candidate['name'];
                         return (
                           <p key={name} className="small">
-                            <strong>{name}:</strong> {f.status} ·{' '}
-                            {f.evidence || f.raw || 'Not visible'}
-                            {f.imageIndex !== null ? ` · Photo ${f.imageIndex + 1}` : ''}
+                            <strong>{t(`field.${name}`)}:</strong> {t(`evidence.${f.status}`)} ·{' '}
+                            {f.evidence || f.raw || t('Not visible')}
+                            {f.imageIndex !== null
+                              ? ` · ${t('Photo {{index}}', { index: f.imageIndex + 1 })}`
+                              : ''}
                           </p>
                         );
                       })}
@@ -449,11 +472,14 @@ export function ScanScreen({
                                 updateLine(i, { confirmedMedicine: e.target.checked })
                               }
                             />
-                            I confirm this selected line is a medicine
+                            {t('I confirm this selected line is a medicine')}
                           </label>
                           <Field
-                            label="Purchased pack count"
-                            hint={`Visible receipt quantity: ${c.purchasedPacks.value ?? 'unknown'}. Confirm how many physical packs to add.`}
+                            label={t('Purchased pack count')}
+                            hint={t(
+                              'Visible receipt quantity: {{amount}}. Confirm how many physical packs to add.',
+                              { amount: c.purchasedPacks.value ?? t('Unknown / not sure') },
+                            )}
                           >
                             <input
                               className="input"
@@ -467,12 +493,13 @@ export function ScanScreen({
                             />
                           </Field>
                           <p className="small muted">
-                            Enter the remaining quantity and unit for each pack below. These are
-                            separate from the purchased pack count.
+                            {t(
+                              'Enter the remaining quantity and unit for each pack below. These are separate from the purchased pack count.',
+                            )}
                           </p>
                           {line.purchase && (
                             <div className="purchase-fields">
-                              <Field label="Purchase date">
+                              <Field label={t('Purchase date')}>
                                 <input
                                   className="input"
                                   type="date"
@@ -484,7 +511,7 @@ export function ScanScreen({
                                   }
                                 />
                               </Field>
-                              <Field label="Pharmacy">
+                              <Field label={t('Pharmacy')}>
                                 <input
                                   className="input"
                                   maxLength={300}
@@ -505,8 +532,8 @@ export function ScanScreen({
                                     key={k}
                                     label={
                                       k === 'unitPrice'
-                                        ? 'Price per purchased pack'
-                                        : 'Receipt line total'
+                                        ? t('Price per purchased pack')
+                                        : t('Receipt line total')
                                     }
                                   >
                                     <input
@@ -527,7 +554,7 @@ export function ScanScreen({
                                   </Field>
                                 ))}
                               </div>
-                              <Field label="Currency">
+                              <Field label={t('Currency')}>
                                 <input
                                   className="input"
                                   maxLength={3}
@@ -546,13 +573,13 @@ export function ScanScreen({
                           )}
                         </>
                       )}
-                      <Field label="Match an existing product or create an unverified one">
+                      <Field label={t('Match an existing product or create an unverified one')}>
                         <select
                           className="select"
                           value={line.productId}
                           onChange={(e) => updateLine(i, { productId: e.target.value })}
                         >
-                          <option value="">Create a product from reviewed text</option>
+                          <option value="">{t('Create a product from reviewed text')}</option>
                           {products.map((p) => (
                             <option value={p.id} key={p.id}>
                               {p.name}
@@ -579,14 +606,14 @@ export function ScanScreen({
           </div>
           <div className="scan-controls">
             <button className="btn btn-outline" disabled={busy} onClick={() => void cancel()}>
-              Cancel review
+              {t('Cancel review')}
             </button>
             <button
               className="btn btn-primary"
               disabled={busy || !lines.some((l) => l.selected) || (draft.duplicate && !duplicate)}
               onClick={() => void save()}
             >
-              {busy ? 'Saving…' : 'Save selected packs'}
+              {busy ? t('Saving…') : t('Save selected packs')}
             </button>
           </div>
         </>
@@ -594,13 +621,13 @@ export function ScanScreen({
       <button
         className="btn btn-ghost manual-entry"
         onClick={() => {
-          if (!draft || window.confirm('Cancel this review and enter a medicine manually?')) {
+          if (!draft || window.confirm(t('Cancel this review and enter a medicine manually?'))) {
             void cancel();
             onManual();
           }
         }}
       >
-        Enter medicine manually
+        {t('Enter medicine manually')}
         <IconArrowRight size={18} />
       </button>
     </section>

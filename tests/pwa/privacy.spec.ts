@@ -60,6 +60,12 @@ test('production shell excludes private caches and waits for edits before updati
   await expect(
     page.getByRole('heading', { name: 'Sample tablets · synthetic', exact: true }),
   ).not.toBeVisible();
+  await page.locator('.language-picker select').selectOption('bg');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'bg');
+  await page.reload();
+  await expect(page.locator('.language-picker select')).toHaveValue('bg');
+  await expect(page.getByRole('button', { name: 'Спешна помощ', exact: true })).toBeVisible();
+  await page.locator('.language-picker select').selectOption('en');
   await context.setOffline(false);
   await page.reload();
   await expect(page.getByRole('heading', { name: 'My cabinet', exact: true })).toBeVisible();

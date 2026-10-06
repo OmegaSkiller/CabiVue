@@ -1,3 +1,4 @@
+import i18n, { t, date, number } from '../i18n';
 import { useEffect, useState, type FormEvent } from 'react';
 import { validateBackup, type Backup } from '../../contracts/backup';
 import { api, send } from '../api';
@@ -72,10 +73,11 @@ export function BackupSettings({
   }
   return (
     <section className="card section-card">
-      <h2>Backup & recovery</h2>
+      <h2>{t('Backup & recovery')}</h2>
       <p className="muted">
-        Backups contain your cabinet and household settings in plaintext. Keep downloads private.
-        Account credentials, provider keys, photos, and interviews are excluded.
+        {t(
+          'Backups contain your cabinet and household settings in plaintext. Keep downloads private. Account credentials, provider keys, photos, and interviews are excluded.',
+        )}
       </p>
       <ErrorMessage error={error} />
       <fieldset disabled={busy}>
@@ -88,11 +90,13 @@ export function BackupSettings({
             })
           }
         >
-          Download backup
+          {t('Download backup')}
         </button>
         <Field
-          label="Choose a backup to restore"
-          hint="Replacing the cabinet keeps your account and signs out every session. A recovery point is saved first."
+          label={t('Choose a backup to restore')}
+          hint={t(
+            'Replacing the cabinet keeps your account and signs out every session. A recovery point is saved first.',
+          )}
         >
           <input
             className="file-input"
@@ -108,15 +112,22 @@ export function BackupSettings({
         {prepared && (
           <form onSubmit={restore}>
             <p role="status">
-              Backup from {prepared.backup.exportedAt.slice(0, 10)}: {prepared.backup.packs.length}{' '}
-              packs, {prepared.backup.products.length} products, {prepared.backup.locations.length}{' '}
-              locations.
+              {t(
+                'Backup from {{date}}: {{packs}} packs, {{products}} products, {{locations}} locations.',
+                {
+                  date: date(prepared.backup.exportedAt.slice(0, 10)),
+                  packs: number(prepared.backup.packs.length),
+                  products: number(prepared.backup.products.length),
+                  locations: number(prepared.backup.locations.length),
+                },
+              )}
             </p>
             <p className="warning-copy">
-              This replaces all current cabinet records and household settings. Save or discard
-              other edits first.
+              {t(
+                'This replaces all current cabinet records and household settings. Save or discard other edits first.',
+              )}
             </p>
-            <Field label="Type RESTORE to confirm replacement">
+            <Field label={t('Type RESTORE to confirm replacement')}>
               <input
                 className="input"
                 autoComplete="off"
@@ -133,20 +144,20 @@ export function BackupSettings({
                   setConfirmation('');
                 }}
               >
-                Cancel restore
+                {t('Cancel restore')}
               </button>
               <button
                 className="btn btn-primary"
                 disabled={!canRestore || confirmation !== 'RESTORE'}
               >
-                Replace cabinet & sign out
+                {t('Replace cabinet & sign out')}
               </button>
             </div>
           </form>
         )}
-        <h3>Previous recovery points</h3>
+        <h3>{t('Previous recovery points')}</h3>
         <p className="small muted">
-          These files live on your server. Download one before selecting it for a restore.
+          {t('These files live on your server. Download one before selecting it for a restore.')}
         </p>
         <button
           className="btn btn-outline"
@@ -156,7 +167,7 @@ export function BackupSettings({
             })
           }
         >
-          List recovery points
+          {t('List recovery points')}
         </button>
         {files.map((name) => (
           <div key={name}>
@@ -168,12 +179,14 @@ export function BackupSettings({
                 })
               }
             >
-              Download {new Date(Number(name.split('-')[1])).toLocaleString()}
+              {t('Download {{date}}', {
+                date: new Date(Number(name.split('-')[1])).toLocaleString(i18n.language),
+              })}
             </button>
           </div>
         ))}
       </fieldset>
-      {busy && <p role="status">Working…</p>}
+      {busy && <p role="status">{t('Working…')}</p>}
     </section>
   );
 }

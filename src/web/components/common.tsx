@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useEffect, useRef, type ReactNode } from 'react';
 import { IconAlertTriangle, IconX } from '@tabler/icons-react';
 export function WarningIcon() {
@@ -7,7 +8,7 @@ export function ErrorMessage({ error }: { error: string }) {
   return error ? (
     <div className="alert alert-error" role="alert">
       <WarningIcon />
-      <span>{error}</span>
+      <span>{t(error)}</span>
     </div>
   ) : null;
 }
@@ -63,7 +64,7 @@ export function Dialog({
           <button
             className="btn btn-ghost btn-square"
             type="button"
-            aria-label="Close dialog"
+            aria-label={t('Close dialog')}
             onClick={onClose}
           >
             <IconX size={22} />

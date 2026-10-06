@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useEffect, useState, type FormEvent } from 'react';
 import { IconArrowRight, IconNotes } from '@tabler/icons-react';
 import type { IntakeView, Risk, ReportedGroup } from '../../contracts/assistant';
@@ -31,15 +32,15 @@ export function RiskFields({
   return (
     <div className="risk-fields">
       {keys.map((k) => (
-        <Field key={k} label={riskLabels[k]}>
+        <Field key={k} label={t(riskLabels[k])}>
           <select
             className="select"
             value={risk[k]}
             onChange={(e) => onChange({ ...risk, [k]: e.target.value as Risk[typeof k] })}
           >
-            <option value="unknown">Unknown / not sure</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
+            <option value="unknown">{t('Unknown / not sure')}</option>
+            <option value="yes">{t('Yes')}</option>
+            <option value="no">{t('No')}</option>
           </select>
         </Field>
       ))}
@@ -145,7 +146,7 @@ export function AssistantScreen({
     }
   }
   async function reset() {
-    if (!window.confirm('Clear this transient interview and start a new one?')) return;
+    if (!window.confirm(t('Clear this transient interview and start a new one?'))) return;
     setError('');
     try {
       apply(await api<IntakeView>('/assistant', send('DELETE', {})));
@@ -161,33 +162,38 @@ export function AssistantScreen({
     <section className={`assistant-screen ${compact ? 'assistant-compact' : ''}`}>
       <div className="assistant-intro">
         <IconNotes size={26} />
-        <h2>Prepare your questions</h2>
+        <h2>{t('Prepare your questions')}</h2>
         <p className="muted">
-          Collect your symptom history and review available leaflet facts. This assistant cannot
-          diagnose, choose medication, or generate doses.
+          {t(
+            'Collect your symptom history and review available leaflet facts. This assistant cannot diagnose, choose medication, or generate doses.',
+          )}
         </p>
       </div>
       <button className="btn btn-outline urgent-assistant" onClick={onUrgent}>
         <WarningIcon />
-        Urgent help
+        {t('Urgent help')}
       </button>
       <ErrorMessage error={error} />
       {!view ? (
-        <p role="status">Opening the interview…</p>
+        <p role="status">{t('Opening the interview…')}</p>
       ) : (
         <>
           {view.state === 'emergency' ? (
             <div className="alert alert-error" role="alert">
               <WarningIcon />
               <div>
-                <strong>Get urgent medical help now.</strong>
+                <strong>{t('Get urgent medical help now.')}</strong>
                 <p>
-                  Contact {view.urgentContact || 'local emergency services'}
-                  {view.urgentLocation ? ` (${view.urgentLocation})` : ''}. Do not wait for this
-                  interview or try a cabinet medicine first.
+                  {t(
+                    'Contact {{contact}}{{location}}. Do not wait for this interview or try a cabinet medicine first.',
+                    {
+                      contact: view.urgentContact || t('local emergency services'),
+                      location: view.urgentLocation ? ` (${view.urgentLocation})` : '',
+                    },
+                  )}
                 </p>
                 <button className="btn btn-outline" onClick={onUrgent}>
-                  Open urgent help
+                  {t('Open urgent help')}
                 </button>
               </div>
             </div>
@@ -197,11 +203,11 @@ export function AssistantScreen({
                 <div className="alert missing-alert" role="alert">
                   <WarningIcon />
                   <div>
-                    <strong>Arrange professional review.</strong>
+                    <strong>{t('Arrange professional review.')}</strong>
                     <p>
-                      Contact a doctor promptly for an assessment. This interview cannot determine
-                      the cause or suitable treatment. Severe or worsening symptoms may need urgent
-                      help.
+                      {t(
+                        'Contact a doctor promptly for an assessment. This interview cannot determine the cause or suitable treatment. Severe or worsening symptoms may need urgent help.',
+                      )}
                     </p>
                   </div>
                 </div>
@@ -209,8 +215,10 @@ export function AssistantScreen({
               {next !== null && next !== undefined ? (
                 <form className="interview-form" onSubmit={answer}>
                   <fieldset disabled={busy}>
-                    <p className="eyebrow">History group {next + 1} of 5</p>
-                    <h3>{view.question}</h3>
+                    <p className="eyebrow">
+                      {t('History group {{index}} of 5', { index: next + 1 })}
+                    </p>
+                    <h3>{view.question && t(view.question)}</h3>
                     {next === 0 && <RiskFields risk={risk} onChange={setRisk} keys={['urgent']} />}
                     {next === 2 && (
                       <RiskFields
@@ -223,8 +231,10 @@ export function AssistantScreen({
                       <RiskFields risk={risk} onChange={setRisk} keys={['unsafeExposure']} />
                     )}
                     <Field
-                      label="Your answer"
-                      hint="Say ‘unknown’ for anything you’re unsure about. Include only what you want in this transient interview."
+                      label={t('Your answer')}
+                      hint={t(
+                        'Say ‘unknown’ for anything you’re unsure about. Include only what you want in this transient interview.',
+                      )}
                     >
                       <textarea
                         className="textarea"
@@ -246,15 +256,17 @@ export function AssistantScreen({
                         }}
                       />
                       {demo
-                        ? 'Use simulated history extraction'
-                        : 'Use OpenAI to extract interview facts'}
+                        ? t('Use simulated history extraction')
+                        : t('Use OpenAI to extract interview facts')}
                     </label>
                     {useProvider && (
                       <div className="consent-note">
                         <p className="small">
                           {demo
-                            ? 'Demo output is simulated. No provider request is made.'
-                            : 'OpenAI receives this answer, the interview group, urgency state, and the selected pack’s allowed source facts/limitations. Other cabinet records and previous answers are not sent. Provider policies and charges apply.'}
+                            ? t('Demo output is simulated. No provider request is made.')
+                            : t(
+                                'OpenAI receives this answer, the interview group, urgency state, and the selected pack’s allowed source facts/limitations. Other cabinet records and previous answers are not sent. Provider policies and charges apply.',
+                              )}
                         </p>
                         <label className="check-label">
                           <input
@@ -264,8 +276,10 @@ export function AssistantScreen({
                             onChange={(e) => setConsent(e.target.checked)}
                           />
                           {demo
-                            ? 'I understand this extraction is simulated.'
-                            : 'Send this answer and selected context to OpenAI for this request.'}
+                            ? t('I understand this extraction is simulated.')
+                            : t(
+                                'Send this answer and selected context to OpenAI for this request.',
+                              )}
                         </label>
                       </div>
                     )}
@@ -273,20 +287,21 @@ export function AssistantScreen({
                       className="btn btn-primary"
                       disabled={busy || (useProvider && !consent)}
                     >
-                      {busy ? 'Processing…' : 'Continue interview'}
+                      {busy ? t('Processing…') : t('Continue interview')}
                       <IconArrowRight size={18} />
                     </button>
                   </fieldset>
                 </form>
               ) : (
                 <section className="interview-summary">
-                  <h3>Review your reported history</h3>
+                  <h3>{t('Review your reported history')}</h3>
                   <p className="small muted">
-                    Extracted text is provisional. Check and edit it before confirming. Unknown
-                    answers stay unknown.
+                    {t(
+                      'Extracted text is provisional. Check and edit it before confirming. Unknown answers stay unknown.',
+                    )}
                   </p>
                   {groups.map((g, i) => (
-                    <Field key={g.groupIndex} label={`${i + 1}. ${view.questions[i]}`}>
+                    <Field key={g.groupIndex} label={`${i + 1}. ${t(view.questions[i])}`}>
                       <textarea
                         className="textarea"
                         rows={3}
@@ -308,7 +323,9 @@ export function AssistantScreen({
                         }}
                       />
                       <span className="small muted">
-                        {g.status === 'unknown' ? 'Unknown / not supplied' : 'Reported by you'}
+                        {g.status === 'unknown'
+                          ? t('Unknown / not supplied')
+                          : t('Reported by you')}
                       </span>
                     </Field>
                   ))}
@@ -322,8 +339,9 @@ export function AssistantScreen({
                   />
                   {view.confirmed ? (
                     <div className="alert alert-success" role="status">
-                      History confirmed for this session. You can select and copy it for your
-                      professional consultation.
+                      {t(
+                        'History confirmed for this session. You can select and copy it for your professional consultation.',
+                      )}
                     </div>
                   ) : (
                     <button
@@ -331,29 +349,29 @@ export function AssistantScreen({
                       disabled={busy}
                       onClick={() => void confirm()}
                     >
-                      Confirm my summary
+                      {t('Confirm my summary')}
                     </button>
                   )}
                 </section>
               )}
             </>
           )}
-          <p className="assistant-reminder">{view.reminder}</p>
+          <p className="assistant-reminder">{t(view.reminder)}</p>
           <button className="btn btn-ghost" onClick={() => void reset()}>
-            Clear interview
+            {t('Clear interview')}
           </button>
         </>
       )}
       <section className="leaflet-section">
-        <h3>Leaflet information</h3>
-        <Field label="Choose a pack">
+        <h3>{t('Leaflet information')}</h3>
+        <Field label={t('Choose a pack')}>
           <select className="select" value={selected} onChange={(e) => setSelected(e.target.value)}>
-            <option value="">Select an exact pack</option>
+            <option value="">{t('Select an exact pack')}</option>
             {packs
               .filter((p) => !p.archived)
               .map((p) => (
                 <option key={p.id} value={p.id}>
-                  {p.product.name} · {p.expiryValue || 'expiry unknown'}
+                  {p.product.name} · {p.expiryValue || t('expiry unknown')}
                 </option>
               ))}
           </select>
@@ -363,11 +381,11 @@ export function AssistantScreen({
             <strong>{facts.pack.product.name}</strong>
             {facts.blocks.length > 0 ? (
               <>
-                <p className="small muted">Product-specific guidance is unavailable:</p>
+                <p className="small muted">{t('Product-specific guidance is unavailable:')}</p>
                 {facts.blocks.map((b, i) => (
                   <p className="warning-copy" key={i}>
                     <WarningIcon />
-                    {b}
+                    {t(b)}
                   </p>
                 ))}
               </>
@@ -375,7 +393,7 @@ export function AssistantScreen({
               reviewedSources(facts.pack).map((s) => (
                 <div key={s.id}>
                   <p className="small">
-                    Reviewed general leaflet facts do not establish suitability for a person.
+                    {t('Reviewed general leaflet facts do not establish suitability for a person.')}
                   </p>
                   {s.facts.map((f, i) => (
                     <p key={i}>{f}</p>
@@ -386,7 +404,7 @@ export function AssistantScreen({
                     rel="noopener noreferrer"
                     className="source-link"
                   >
-                    Official source · {s.revision}
+                    {t('Official source · {{revision}}', { revision: s.revision })}
                   </a>
                   <p className="small muted">{s.provenance}</p>
                 </div>

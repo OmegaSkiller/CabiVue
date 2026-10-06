@@ -10,11 +10,11 @@ external deployment.
 | Proof                                        | Result                                                                            |
 | -------------------------------------------- | --------------------------------------------------------------------------------- |
 | TypeScript, production frontend/server build | Passed                                                                            |
-| Vitest domain/API/provider tests             | 30 passed                                                                         |
-| Playwright browser flows                     | 4 passed                                                                          |
+| Vitest domain/API/provider tests             | 34 passed                                                                         |
+| Playwright browser flows                     | 6 passed                                                                          |
 | Production service-worker browser flow       | 1 passed                                                                          |
 | Layout widths                                | 320, 360, 390, 768, 1024, 1440 px                                                 |
-| axe checks                                   | Cabinet/dialogs in both themes, scan review, recovery settings                    |
+| axe checks                                   | Cabinet/dialogs in both themes, Arabic RTL dialog, scan review, recovery settings |
 | Docker ARM64 build/runtime                   | Passed; UID 1000, actual health check                                             |
 | Docker recovery/persistence                  | Export/restore and preceding recovery artifact; same-volume container replacement |
 | Runtime secrets                              | Session/key cleared after logout, idle expiry, restore, restart                   |
@@ -56,3 +56,10 @@ Camera capture, installation prompts, and browser behavior on physical iOS/Andro
 devices still need device testing. Chromium responsive checks do not establish
 cross-browser/device support. No clinical/regulatory review or trademark clearance
 is claimed. No external service has been deployed.
+
+Localization checks cover ten complete bundled catalogs, interpolation/plural
+contracts, Bulgarian expiry warnings and login errors, locale persistence,
+form/scan/interview draft retention, and layouts at 320/390/1440 px. The production
+PWA switches languages and retains its preference after an offline reload.
+Translation accuracy has not received comprehensive native-speaker or clinical
+review; see [localization](localization.md).

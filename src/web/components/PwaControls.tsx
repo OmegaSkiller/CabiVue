@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useEffect, useState } from 'react';
 import { registerSW } from 'virtual:pwa-register';
 import { IconDownload, IconRefresh } from '@tabler/icons-react';
@@ -36,18 +37,18 @@ export function PwaControls({ blocked }: { blocked: boolean }) {
         <div className="alert update-alert" role="status">
           <IconRefresh size={22} />
           <div>
-            <strong>A new Cabivue version is ready</strong>
+            <strong>{t('A new Cabivue version is ready')}</strong>
             <p>
               {blocked
-                ? 'Finish or discard your edits, scan review, or interview before updating.'
-                : 'Reload when you’re ready.'}
+                ? t('Finish or discard your edits, scan review, or interview before updating.')
+                : t('Reload when you’re ready.')}
             </p>
             <button
               className="btn btn-primary"
               disabled={blocked}
               onClick={() => void update?.(true)}
             >
-              Update & reload
+              {t('Update & reload')}
             </button>
           </div>
         </div>
@@ -62,7 +63,7 @@ export function PwaControls({ blocked }: { blocked: boolean }) {
           }}
         >
           <IconDownload size={19} />
-          Install Cabivue
+          {t('Install Cabivue')}
         </button>
       )}
     </>

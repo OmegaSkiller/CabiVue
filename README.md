@@ -14,6 +14,7 @@ Cabivue is an early open-source release for one household per instance. Inventor
 - Medicine-photo and receipt scans with previews, consent, editable review, and atomic, idempotent save. Missing expiry stays unknown; a receipt date never becomes expiry.
 - Optional session-only OpenAI keys, five interview groups, editable summaries, and fixed urgent help available before login.
 - Light/dark branded UI, installable PWA, public-shell caching, and updates that wait for edits. Private records and offline writes are not cached.
+- Ten bundled interface languages, including Bulgarian and Arabic RTL, with a persistent language selector. See [localization and translation review status](docs/localization.md).
 - Validated plaintext exports and restores with a recovery point before replacement.
 
 ![Actual synthetic desktop cabinet](docs/screenshots/cabinet-desktop-light.png)

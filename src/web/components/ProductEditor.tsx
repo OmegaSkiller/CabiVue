@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState, type FormEvent } from 'react';
 import type { Product, ProductInput } from '../../contracts/inventory';
 import { api, send } from '../api';
@@ -19,7 +20,8 @@ export function ProductEditor({
   const close = () => {
     if (
       !busy &&
-      (JSON.stringify(value) === JSON.stringify(seed) || window.confirm('Discard product changes?'))
+      (JSON.stringify(value) === JSON.stringify(seed) ||
+        window.confirm(t('Discard product changes?')))
     )
       onClose();
   };
@@ -36,10 +38,11 @@ export function ProductEditor({
     }
   }
   return (
-    <Dialog title="Edit shared product" onClose={close}>
+    <Dialog title={t('Edit shared product')} onClose={close}>
       <p className="warning-copy">
-        These details change every pack linked to this product. Existing leaflet reviews and
-        prescription status need a new review afterward.
+        {t(
+          'These details change every pack linked to this product. Existing leaflet reviews and prescription status need a new review afterward.',
+        )}
       </p>
       <ErrorMessage error={error} />
       <form onSubmit={submit}>
@@ -47,9 +50,11 @@ export function ProductEditor({
           <ProductFields product={value} onChange={setValue} />
           <div className="dialog-actions">
             <button className="btn btn-ghost" type="button" onClick={close}>
-              Cancel
+              {t('Cancel')}
             </button>
-            <button className="btn btn-primary">{busy ? 'Saving…' : 'Save shared product'}</button>
+            <button className="btn btn-primary">
+              {busy ? t('Saving…') : t('Save shared product')}
+            </button>
           </div>
         </fieldset>
       </form>
